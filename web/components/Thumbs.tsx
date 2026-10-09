@@ -31,32 +31,36 @@ export function Avatar({ small }: { small?: boolean }) {
   );
 }
 
-/** Hero: one creator, split down the middle — the original take vs the British cut. */
+/** Hero: a fun creator-vlog thumbnail. Hook on a blue panel, the creator on the right. */
 export function HeroThumb() {
-  const p = PHOTOS.podcaster;
+  const p = PHOTOS.surprised;
   return (
     <figure className="hthumb">
       <div className="hthumb__frame" aria-hidden="true">
-        <Img photo={p} w={960} h={540} className="hthumb__before" />
-        <span className="hthumb__afterwrap">
-          <Img photo={p} w={960} h={540} className="hthumb__after" />
-        </span>
-        <span className="hthumb__divider">
-          <span className="hthumb__handle">A | B</span>
-        </span>
-        <span className="chip chip--chalk hthumb__a">Original</span>
-        <span className="chip chip--accent hthumb__b">British cut</span>
-        <p className="hthumb__hook">
-          <span className="tt">Same me.</span>
-          <span className="tt tt--accent">New accent.</span>
-        </p>
-        <span className="hthumb__dur">12:47</span>
+        <div className="hthumb__photo">
+          <Img photo={p} w={720} h={720} />
+        </div>
+        <div className="hthumb__panel">
+          <p className="hthumb__hook">
+            <span>Can I pull off</span>
+            <span>
+              a <mark>British</mark>
+            </span>
+            <span>accent?</span>
+          </p>
+        </div>
+        <svg className="hthumb__arrow" viewBox="0 0 120 70">
+          <path d="M6 52 C 30 64, 70 60, 104 26" />
+          <path d="M86 22 L 106 22 L 104 42" />
+        </svg>
+        <span className="hthumb__sticker">GB</span>
+        <span className="hthumb__dur">14:52</span>
         <span className="hthumb__watched" />
       </div>
       <figcaption className="vmeta">
         <Avatar />
         <span>
-          <span className="vmeta__title">I dubbed my whole episode into a British accent</span>
+          <span className="vmeta__title">I tried a British accent for an entire video</span>
           <span className="vmeta__sub">Illustration · Photo: {p.by} / Unsplash</span>
         </span>
       </figcaption>
@@ -66,16 +70,14 @@ export function HeroThumb() {
 
 /** A vertical short with word-by-word captions. */
 export function ShortCard() {
-  const p = PHOTOS.selfie;
-  const words = ['Same', 'voice.', 'New', 'accent.'];
+  const p = PHOTOS.pointing;
+  const words = ['Day', 'one', 'as', 'an', 'Aussie'];
   return (
     <div className="short" aria-hidden="true">
       <Img photo={p} w={360} h={640} />
       <span className="short__scrim" />
       <span className="short__top">
-        <span className="chip chip--accent">
-          <span className="chip__dot" /> Australian cut
-        </span>
+        <span className="chip chip--accent">Australian cut</span>
       </span>
       <p className="short__caps">
         {words.map((w, i) => (

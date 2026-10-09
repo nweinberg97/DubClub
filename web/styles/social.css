@@ -99,103 +99,87 @@
 
 .hthumb {
   margin: 0;
-  transform: none;
 }
 .hthumb__frame {
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(135deg, #1c2338, var(--court-2));
-  box-shadow: 0 30px 60px rgb(0 0 0 / 0.5);
+  background: #2b2f8f;
+  box-shadow: 0 30px 70px -20px rgb(0 0 0 / 0.7);
 }
-.hthumb__before {
-  filter: grayscale(1) contrast(1.05) brightness(0.85);
-}
-.hthumb__afterwrap {
-  position: absolute;
-  inset: 0;
-  clip-path: inset(0 0 0 52%);
-  animation: wipe 1400ms var(--ease-out) 300ms both;
-}
-@keyframes wipe {
-  from {
-    clip-path: inset(0 0 0 100%);
-  }
-}
-.hthumb__after {
-  filter: saturate(1.1);
-}
-.hthumb__afterwrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgb(59 108 255 / 0.28), transparent 60%);
-  mix-blend-mode: screen;
-}
-.hthumb__divider {
+/* creator on the right, flush to the edge */
+.hthumb__photo {
   position: absolute;
   top: 0;
+  right: 0;
   bottom: 0;
-  left: 52%;
-  width: 3px;
-  margin-left: -1.5px;
-  background: var(--chalk);
-  animation: wipe-line 1400ms var(--ease-out) 300ms both;
+  width: 56.25%; /* square photo in a 16:9 frame */
+  background: #3a3fae;
 }
-@keyframes wipe-line {
-  from {
-    left: 100%;
-  }
+.hthumb__photo .ph {
+  object-position: center 30%;
 }
-.hthumb__handle {
+/* blue hook panel on the left, blending into the photo */
+.hthumb__panel {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--chalk);
-  color: var(--black);
+  inset: 0 auto 0 0;
+  width: 58%;
+  display: flex;
+  align-items: center;
+  padding: 0 6% 0 6%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 72%, rgb(53 99 255 / 0) 100%);
+}
+.hthumb__hook {
+  margin: 0;
   font-family: var(--display);
   font-style: italic;
   font-weight: 700;
-  font-size: 0.8125rem;
-  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--white);
+  font-size: clamp(1.6rem, 3.3vw, 3.1rem);
+  line-height: 0.92;
+  text-shadow: 0 3px 0 rgb(0 0 0 / 0.25);
 }
-.hthumb__a,
-.hthumb__b {
+.hthumb__hook span {
+  display: block;
+}
+.hthumb__hook mark {
+  background: var(--white);
+  color: var(--accent);
+  padding: 0 0.12em;
+  border-radius: 0.12em;
+  text-shadow: none;
+}
+.hthumb__arrow {
   position: absolute;
-  top: 5%;
-}
-.hthumb__a {
-  left: 4%;
-}
-.hthumb__b {
-  right: 4%;
-}
-.hthumb__hook {
-  position: absolute;
-  left: 5%;
+  left: 34%;
   bottom: 12%;
-  margin: 0;
-  font-size: clamp(1.8rem, 3.6vw, 3.5rem);
-  line-height: 0.9;
+  width: 16%;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 0.25));
 }
-.hthumb::before {
-  content: '';
-}
-.hthumb__frame::after {
-  content: '';
+.hthumb__sticker {
   position: absolute;
-  inset: 45% 0 0 0;
-  background: linear-gradient(transparent, rgb(0 0 0 / 0.6));
-  pointer-events: none;
-}
-.hthumb__hook,
-.hthumb__dur,
-.hthumb__watched {
-  z-index: 1;
+  right: 4%;
+  top: 6%;
+  display: grid;
+  place-items: center;
+  width: 13%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--accent);
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.6vw, 1.5rem);
+  transform: rotate(10deg);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.3);
 }
 .hthumb__dur {
   position: absolute;
@@ -562,4 +546,44 @@
 }
 .hero__h {
   font-size: clamp(3.2rem, 6.6vw, 6.75rem);
+}
+/* hook sizes with the thumbnail itself, so it reads the same at every width */
+.hthumb__frame {
+  container-type: inline-size;
+}
+.hthumb__hook {
+  font-size: 6.4cqw;
+  line-height: 1.02;
+}
+.hthumb__hook span {
+  white-space: nowrap;
+}
+.hthumb__hook mark {
+  display: inline-block;
+  line-height: 0.95;
+  padding: 0.02em 0.14em 0;
+  margin: 0.04em 0;
+}
+.hthumb__sticker {
+  font-size: 3.2cqw;
+}
+.hthumb__arrow {
+  left: 30%;
+  bottom: 8%;
+  width: 18%;
+}
+@media (max-width: 600px) {
+  .hero__media {
+    padding-bottom: 46%;
+  }
+  .short {
+    width: 34%;
+  }
+}
+@media (min-width: 601px) {
+  .short {
+    width: 25%;
+    right: -3%;
+    bottom: -4%;
+  }
 }
