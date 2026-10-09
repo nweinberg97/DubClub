@@ -1,0 +1,2 @@
+{ "name": "probe", "private": true, "type": "module",
+  "dependencies": { "kokoro-js": "^1.2.1", "@huggingface/transformers": "^3.7.0" } }
