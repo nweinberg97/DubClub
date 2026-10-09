@@ -30,7 +30,7 @@
   min-width: 44px;
   height: 38px;
   padding: 0 8px;
-  background: var(--red);
+  background: var(--accent);
   color: var(--black);
   font-size: 1.5rem;
   clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
@@ -129,7 +129,7 @@
   border-top: 1px solid var(--line);
 }
 .takes__item.is-open .takes__name {
-  color: var(--red);
+  color: var(--accent);
 }
 .takes__open {
   flex: 1;
@@ -162,7 +162,7 @@
   background: none;
   border: 0;
   font-size: 0.8125rem;
-  color: var(--red);
+  color: var(--danger);
   cursor: pointer;
   padding: var(--s2);
   text-decoration: underline;

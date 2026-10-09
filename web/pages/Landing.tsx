@@ -6,6 +6,7 @@ import { DubDesk } from '../components/DubDesk.tsx';
 import { Faq, type QA } from '../components/Faq.tsx';
 import { StampPicker } from '../components/Stamps.tsx';
 import { FeedCard, HeroThumb, ShortCard, type FeedItem } from '../components/Thumbs.tsx';
+import { PHOTOS } from '../lib/photos.ts';
 import { useCapabilities, useDub } from '../lib/hooks.ts';
 import { Link, href } from '../router.tsx';
 
@@ -39,7 +40,7 @@ export function Landing() {
                 ? [...places.map((p) => `${p} cut`), 'No re-records', 'No voice actors', ...places.map((p) => `${p} cut`), 'No booth']
                 : ['No re-records', 'No voice actors', 'No booth', 'No re-records', 'No voice actors', 'No booth']
           }
-          tone={dev ? 'gold' : 'red'}
+          tone={dev ? 'pop' : 'accent'}
         />
         <section id="try" className="sect sect--court try" aria-labelledby="try-h">
           <div className="wrap">
@@ -106,7 +107,7 @@ export function SiteNav() {
           <a href={href('/#privacy')} onClick={close}>
             Privacy
           </a>
-          <Link to={BRAND.studioPath} className="btn btn--red nav__cta" onClick={close}>
+          <Link to={BRAND.studioPath} className="btn btn--accent nav__cta" onClick={close}>
             <span>Get dubbing</span>
           </Link>
         </nav>
@@ -125,19 +126,19 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
       <div className="wrap hero__inner">
         <div className="hero__grid">
           <div className="hero__copy">
-            <span className="chip chip--red hero__live">
+            <span className="chip chip--accent hero__live">
               <span className="chip__dot" /> New: dub the take you already posted
             </span>
             <h1 id="hero-h" className="hero__h">
               <span className="hero__l1 tt">Same voice.</span>
-              <span className="hero__l2 tt tt--gold">New accent.</span>
+              <span className="hero__l2 tt tt--accent">New accent.</span>
             </h1>
             <p className="hero__lede">
               Your video’s done and your voice is on it. Drop it in, pick an accent, and get a new cut that aims to still
               sound like you — same words, same timing. No re-records, no voice actor.
             </p>
             <div className="hero__ctas">
-              <Link to={BRAND.studioPath} className="btn btn--red btn--big">
+              <Link to={BRAND.studioPath} className="btn btn--accent btn--big">
                 <span>Start dubbing</span>
               </Link>
               <a href="#try" className="btn btn--line btn--big">
@@ -148,11 +149,6 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
           <div className="hero__media">
             <HeroThumb />
             <ShortCard />
-            <span className="sticker hero__sticker" aria-hidden="true">
-              No
-              <br />
-              re-records
-            </span>
           </div>
         </div>
         <div className="hero__pick">
@@ -173,7 +169,7 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
             </div>
           )}
           {dev && (
-            <p className="hero__note hero__note--gold">
+            <p className="hero__note hero__note--pop">
               Test mode: the accent engine isn’t connected yet, so accents aren’t changed. <a href="#stats">Here’s why.</a>
             </p>
           )}
@@ -259,50 +255,50 @@ function PlayVisual({ kind }: { kind: string }) {
 
 const USES: FeedItem[] = [
   {
-    hook: ['Re-record?', 'Nah.'],
-    tone: 'red',
-    prop: 'circle',
+    photo: PHOTOS.vlogger,
+    hook: ['No re-record.', 'New audience.'],
+    label: 'British cut',
     title: 'Give that take another take',
     who: 'YouTube creators',
     body: 'Re-recording a twelve-minute video for a different audience eats a weekend. Dub the take you already have, check it against the original, and export the video with the new track in place.',
   },
   {
+    photo: PHOTOS.editor,
     hook: ['No face.', 'Same voice.'],
-    tone: 'court',
-    prop: 'split',
+    label: 'Every upload',
     title: 'One voice. No camera. Every upload.',
     who: 'faceless channels',
     body: 'Settle on one delivery for the channel and apply it to every upload, so episodes recorded months apart still sound like the same show.',
     caveat: 'Pinned: an accent change is not anonymity. Your vocal character, phrasing and what you say can still identify you.',
   },
   {
-    hook: ['1 take', '3 accents'],
-    tone: 'gold',
-    prop: 'arrow',
+    photo: PHOTOS.hoodie,
+    hook: ['1 take.', '3 accents.'],
+    label: 'Shorts',
     title: 'Recurring characters, no method acting',
     who: 'Shorts, Reels and TikTok',
     body: 'Try the bit in three accents before you commit to one. Keep the timing of the joke you actually performed.',
   },
   {
-    hook: ['Skip the', 'booth'],
-    tone: 'chalk',
-    prop: 'badge',
+    photo: PHOTOS.voiceover,
+    hook: ['Hear it', 'before the booth.'],
+    label: 'Voiceover',
     title: 'Audition the accent before you book the booth',
     who: 'podcast clips and voiceover',
     body: 'Hear a read in another accent using a recording you’ve already got, then decide whether it’s worth a proper re-record.',
   },
   {
-    hook: ['Same lesson', 'New accent'],
-    tone: 'red',
-    prop: 'arrow',
+    photo: PHOTOS.teacher,
+    hook: ['Same lesson.', 'New delivery.'],
+    label: 'Course',
     title: 'Same lesson. New delivery.',
     who: 'courses and tutorials',
     body: 'Explore how a recorded tutorial lands in a different accent without rebuilding the course from scratch.',
   },
   {
-    hook: ['Wait…', 'is that me?!'],
-    tone: 'court',
-    prop: 'circle',
+    photo: PHOTOS.glasses,
+    hook: ['Wait…', 'is that me?'],
+    label: 'Just for fun',
     title: 'Hear yourself from somewhere else',
     who: 'anyone curious',
     body: 'No project required. Record a sentence, send it on tour, flip between A and B, and laugh at the bits that almost work.',
@@ -495,6 +491,10 @@ export function SiteFooter() {
           <a href={href('/#privacy')}>Privacy</a>
           <a href={href('/#faq')}>FAQ</a>
         </nav>
+        <p className="foot__credits">
+          Photos from Unsplash by {Array.from(new Set(Object.values(PHOTOS).map((p) => p.by))).join(', ')}. People shown are
+          illustrative and not Dub Club users.
+        </p>
         <p className="foot__small">Early build. Terms of service haven’t been published yet. “{BRAND.name}” is a working name.</p>
       </div>
     </footer>

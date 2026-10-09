@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#0c0c0d"/>
-  <path d="M14 8h40l-8 48H6z" fill="#ff3b1f"/>
-  <text x="31" y="44" text-anchor="middle" font-family="'Helvetica Neue Condensed','Arial Narrow',Impact,sans-serif" font-style="italic" font-weight="700" font-size="34" fill="#0c0c0d">DC</text>
+  <rect width="64" height="64" rx="14" fill="#0c0c0d"/>
+  <path d="M17 12h36l-7 40H10z" fill="#3b6cff"/>
+  <path d="M24 20h9c7 0 11 4 10 11s-6 13-14 13h-9zm8 18c4 0 6-3 6.5-7s-1-5-4.5-5h-2.5l-2 12z" fill="#0c0c0d"/>
 </svg>

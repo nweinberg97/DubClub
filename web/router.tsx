@@ -5,7 +5,8 @@ import { BASE } from './lib/env.ts';
 export const href = (to: string) => BASE + (to.startsWith('/') ? to : '/' + to);
 const current = () => {
   const p = location.pathname;
-  const stripped = BASE && p.startsWith(BASE) ? p.slice(BASE.length) : p;
+  // GitHub Pages serves the repo path case-insensitively (/DubClub and /dubclub), so match the same way.
+  const stripped = BASE && p.toLowerCase().startsWith(BASE.toLowerCase()) ? p.slice(BASE.length) : p;
   return stripped || '/';
 };
 

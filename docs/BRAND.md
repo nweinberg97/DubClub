@@ -21,9 +21,12 @@ original; each accent is another cut of it, like versions of a video.
 Plain English stays plain where trust matters: privacy answers, errors, limits and the test-mode notice.
 
 ## Visual system
-- **Colour.** Black court `#0C0C0D`, court grey `#17171A`, chalk `#F4F2EC`, signal red `#FF3B1F`.
-  Gold `#FFC531` only for stickers and test-mode warnings; green `#3DDC84` only for "live" status.
-  Red always means Take B / the dub / the move that makes one.
+- **Colour.** Black `#0C0C0D`, court grey `#17171A`, chalk `#F4F2EC`, electric blue `#3B6CFF`, court green `#39F29A`.
+  Blue always means Take B / the dub / the main action. Green is for highlights, "live" and test-mode notes.
+  Red `#FF5A5F` is reserved for errors and deletes.
+- **Photography.** Real creators from Unsplash (credited in the footer, ids in `web/lib/photos.ts`), framed as
+  video thumbnails: one hook line, one label chip, a blue watched-bar. Calmer than YouTube — no giant arrows or faces
+  pulling expressions, no invented view counts. The hero shows one creator split down the middle, original vs dubbed cut.
 - **Type.** DC Cond (subset of TeX Gyre Heros Condensed) bold italic, uppercase, tight leading for everything loud.
   DC Sans (subset of TeX Gyre Heros) for reading text.
 - **Speed trail.** Outlined repeats chase a headline from behind, like a replay ghosting on a jumbotron

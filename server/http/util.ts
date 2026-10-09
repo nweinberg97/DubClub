@@ -17,7 +17,7 @@ export function securityHeaders(res: ServerResponse) {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "img-src 'self' data: blob:",
+      "img-src 'self' data: blob: https://images.unsplash.com",
       "media-src 'self' blob:",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self'",

@@ -1,20 +1,25 @@
+import { PHOTOS, unsplash, type Photo } from '../lib/photos.ts';
+
 /**
- * Social-feed brand pieces: a video thumbnail, a vertical short, and feed cards.
- * These are illustrations of the product's world — they are labelled as such and never show
- * invented view counts, comments or results.
+ * Creator-feed pieces: a before/after video thumbnail, a vertical short, and feed cards.
+ * Thumbnail-style, but calmer than YouTube: one hook line, one label, real people.
+ * They illustrate the product — no invented view counts, comments or dub results.
  */
 
-function Bars({ n = 28, seed = 3 }: { n?: number; seed?: number }) {
-  const bars = Array.from({ length: n }, (_, i) => {
-    const v = Math.abs(Math.sin(i * 0.9 + seed) * 0.6 + Math.sin(i * 0.37 + seed * 2) * 0.4);
-    return 0.18 + v * 0.82;
-  });
+function Img({ photo, w, h, className = '' }: { photo: Photo; w: number; h: number; className?: string }) {
   return (
-    <span className="bars" aria-hidden="true">
-      {bars.map((h, i) => (
-        <span key={i} style={{ '--h': h.toFixed(2) } as React.CSSProperties} />
-      ))}
-    </span>
+    <img
+      className={`ph ${className}`}
+      src={unsplash(photo, w, h)}
+      srcSet={`${unsplash(photo, w, h)} 1x, ${unsplash(photo, w * 2, h * 2)} 2x`}
+      width={w}
+      height={h}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={(e) => ((e.currentTarget.style.visibility = 'hidden'))}
+    />
   );
 }
 
@@ -26,52 +31,52 @@ export function Avatar({ small }: { small?: boolean }) {
   );
 }
 
-/** The hero thumbnail: before/after split, outlined hook text, a circle, an arrow, a duration badge. */
+/** Hero: one creator, split down the middle — the original take vs the British cut. */
 export function HeroThumb() {
+  const p = PHOTOS.podcaster;
   return (
     <figure className="hthumb">
       <div className="hthumb__frame" aria-hidden="true">
-        <div className="hthumb__half hthumb__half--a">
-          <span className="chip chip--chalk">Before</span>
-          <Bars seed={1} />
-        </div>
-        <div className="hthumb__half hthumb__half--b">
-          <span className="chip chip--black">After</span>
-          <Bars seed={4} />
-        </div>
+        <Img photo={p} w={960} h={540} className="hthumb__before" />
+        <span className="hthumb__afterwrap">
+          <Img photo={p} w={960} h={540} className="hthumb__after" />
+        </span>
+        <span className="hthumb__divider">
+          <span className="hthumb__handle">A | B</span>
+        </span>
+        <span className="chip chip--chalk hthumb__a">Original</span>
+        <span className="chip chip--accent hthumb__b">British cut</span>
         <p className="hthumb__hook">
-          <span className="tt">I went</span>
-          <span className="tt tt--gold hthumb__circled">British</span>
+          <span className="tt">Same me.</span>
+          <span className="tt tt--accent">New accent.</span>
         </p>
-        <svg className="hthumb__arrow" viewBox="0 0 120 80">
-          <path d="M6 70 C 40 66, 70 50, 96 20" />
-          <path d="M78 18 L 100 14 L 98 38" />
-        </svg>
-        <span className="hthumb__dur">0:47</span>
+        <span className="hthumb__dur">12:47</span>
         <span className="hthumb__watched" />
       </div>
       <figcaption className="vmeta">
         <Avatar />
         <span>
-          <span className="vmeta__title">I dubbed my own video into a British accent (no re-record)</span>
-          <span className="vmeta__sub">Dub Club · illustration</span>
+          <span className="vmeta__title">I dubbed my whole episode into a British accent</span>
+          <span className="vmeta__sub">Illustration · Photo: {p.by} / Unsplash</span>
         </span>
       </figcaption>
     </figure>
   );
 }
 
-/** A vertical short with word-by-word captions — the format half your audience scrolls. */
+/** A vertical short with word-by-word captions. */
 export function ShortCard() {
+  const p = PHOTOS.selfie;
   const words = ['Same', 'voice.', 'New', 'accent.'];
   return (
     <div className="short" aria-hidden="true">
+      <Img photo={p} w={360} h={640} />
+      <span className="short__scrim" />
       <span className="short__top">
-        <span className="chip chip--red">
-          <span className="chip__dot" /> Rec
+        <span className="chip chip--accent">
+          <span className="chip__dot" /> Australian cut
         </span>
       </span>
-      <Bars n={18} seed={7} />
       <p className="short__caps">
         {words.map((w, i) => (
           <span key={w} style={{ '--w': i } as React.CSSProperties}>
@@ -86,7 +91,7 @@ export function ShortCard() {
       </span>
       <span className="short__foot">
         <span className="short__handle">@yourchannel</span>
-        <span className="short__audio">Original audio → British cut</span>
+        <span className="short__audio">Original audio → Australian cut</span>
       </span>
     </div>
   );
@@ -94,43 +99,34 @@ export function ShortCard() {
 
 function Icon({ d }: { d: string }) {
   return (
-    <svg viewBox="0 0 24 24" width="26" height="26">
+    <svg viewBox="0 0 24 24" width="24" height="24">
       <path d={d} />
     </svg>
   );
 }
 
 export interface FeedItem {
-  hook: string[];
-  tone: 'red' | 'gold' | 'chalk' | 'court';
-  prop: 'circle' | 'arrow' | 'badge' | 'split';
+  photo: Photo;
+  hook: [string, string];
+  label: string;
   title: string;
   who: string;
   body: string;
   caveat?: string;
 }
 
-/** A use case drawn as a video in a feed. */
+/** A use case drawn as a video in a creator's feed. */
 export function FeedCard({ item }: { item: FeedItem }) {
   return (
     <article className="vcard">
-      <div className={`vthumb vthumb--${item.tone}`} aria-hidden="true">
-        {item.prop === 'split' && <span className="vthumb__split" />}
+      <div className="vthumb" aria-hidden="true">
+        <Img photo={item.photo} w={640} h={360} />
+        <span className="vthumb__scrim" />
+        <span className="chip chip--accent vthumb__label">{item.label}</span>
         <p className="vthumb__hook">
-          {item.hook.map((h, i) => (
-            <span key={i} className={`tt ${i === item.hook.length - 1 ? 'tt--pop' : ''}`}>
-              {h}
-            </span>
-          ))}
+          <span className="tt">{item.hook[0]}</span>
+          <span className="tt tt--accent">{item.hook[1]}</span>
         </p>
-        {item.prop === 'circle' && <span className="vthumb__circle" />}
-        {item.prop === 'arrow' && (
-          <svg className="vthumb__arrow" viewBox="0 0 120 80">
-            <path d="M8 12 C 40 16, 70 34, 96 62" />
-            <path d="M74 64 L 98 64 L 96 40" />
-          </svg>
-        )}
-        {item.prop === 'badge' && <span className="vthumb__badge">New</span>}
         <span className="vthumb__watched" />
       </div>
       <div className="vmeta">

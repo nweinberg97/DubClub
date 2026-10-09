@@ -29,7 +29,7 @@ export function Echo({
   );
 }
 
-/** Wordmark: DUB in chalk, CLUB knocked out of a red slab, both italic condensed. */
+/** Wordmark: DUB in chalk, CLUB knocked out of a blue slab, both italic condensed. */
 export function Wordmark({ className = '' }: { className?: string }) {
   const [first, ...rest] = BRAND.name.toUpperCase().split(' ');
   return (
@@ -47,7 +47,7 @@ export function Wordmark({ className = '' }: { className?: string }) {
 }
 
 /** Scrolling scoreboard ticker. Content is duplicated so the loop is seamless. */
-export function Ticker({ items, tone = 'red' }: { items: string[]; tone?: 'red' | 'gold' | 'chalk' }) {
+export function Ticker({ items, tone = 'accent' }: { items: string[]; tone?: 'accent' | 'pop' | 'chalk' }) {
   const row = items.map((t, i) => (
     <span key={i} className="ticker__item">
       {t}

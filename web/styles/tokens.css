@@ -1,6 +1,6 @@
-/* ─── Dub Club tokens — "League" system ───────────────────────────────
-   Black court, chalk lines, one hot signal red. Gold is for stickers and warnings only.
-   Red always means Take B / the dub / the move that makes one. */
+/* ─── Dub Club tokens ─────────────────────────────────────────────────
+   Black, chalk, electric blue, court green. Blue always means Take B / the dub / the main action.
+   Green is for highlights and "live". Red (--danger) is reserved for errors and deletes. */
 
 @font-face {
   font-family: 'DC Cond';
@@ -45,10 +45,11 @@
   --chalk-2: #e6e3db;
   --steel: #9a9ca3; /* secondary text on black */
   --slate: #55565c; /* secondary text on chalk */
-  --red: #ff3b1f;
-  --red-deep: #d92a10;
-  --gold: #ffc531;
-  --green: #3ddc84;
+  --accent: #3b6cff; /* electric blue — Take B, the dub, the main action */
+  --accent-deep: #2550e0;
+  --pop: #39f29a; /* court green — highlights, stickers, "live" */
+  --green: #39f29a;
+  --danger: #ff5a5f; /* errors and destructive actions only */
 
   --display: 'DC Cond', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif-condensed, Impact, sans-serif;
   --text: 'DC Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
