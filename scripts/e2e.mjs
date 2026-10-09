@@ -64,7 +64,7 @@ try {
   check('accent picker is keyboard navigable', checkedId.toLowerCase().includes((caps.accents[1]?.label ?? '__').toLowerCase()));
 
   // Consent gate
-  const dubBtn = page.getByRole('button', { name: /^Run it back/ });
+  const dubBtn = page.getByRole('button', { name: /^Make the/ });
   check('dub disabled until consent', await dubBtn.isDisabled());
   await page.getByLabel(/It’s my voice/).check();
 
@@ -106,7 +106,7 @@ try {
   await page.getByRole('button', { name: 'Delete this take' }).click();
   await page.locator('input[type=file]').setInputFiles(videoFile);
   await page.getByText('Vlog intro.mp4').first().waitFor({ timeout: 30_000 });
-  await page.getByRole('button', { name: /^Run it back/ }).click();
+  await page.getByRole('button', { name: /^Make the/ }).click();
   await page.getByText('Done. Flip between A and B below.').waitFor({ timeout: 60_000 });
   const [vdl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download video with new audio' }).click()]);
   const vf = path.join(tmp, vdl.suggestedFilename());
@@ -163,7 +163,7 @@ try {
   await mp.getByText(/mic-take-/).first().waitFor({ timeout: 30_000 });
   check('landing demo: mic recording uploads', true);
   await mp.getByLabel(/It’s my voice/).check();
-  await mp.getByRole('button', { name: /^Run it back/ }).click();
+  await mp.getByRole('button', { name: /^Make the/ }).click();
   await mp.getByText('Done. Flip between A and B below.').waitFor({ timeout: 60_000 });
   check('landing demo: recording dubs end to end', await mp.getByRole('button', { name: 'Download WAV' }).isVisible());
   await micBrowser.close();

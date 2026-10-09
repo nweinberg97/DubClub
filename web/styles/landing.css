@@ -651,3 +651,46 @@
     right: 0;
   }
 }
+/* playbook mini thumbnails for the "pick your cut" step */
+.pv-jersey {
+  width: 72px;
+  height: 42px;
+  clip-path: none;
+  box-shadow: inset 0 0 0 2px var(--line);
+  font-size: 1.375rem;
+  place-items: end start;
+  padding: 0 0 4px 6px;
+}
+.pv-jersey--on {
+  box-shadow: inset 0 0 0 3px var(--red);
+  background: var(--court-2);
+  color: var(--red);
+}
+.final__h {
+  font-size: clamp(3.5rem, 10vw, 9.5rem);
+  max-width: 11ch;
+}
+/* "Dub it" step: the take split at the pauses, parts filling as they convert */
+.pv-segs {
+  display: flex;
+  gap: 5px;
+  width: 78%;
+}
+.pv-segs span {
+  flex: 1;
+  height: 26px;
+  background: var(--line);
+  transform: skewX(var(--skew));
+}
+.pv-segs span:nth-child(2n) {
+  flex: 1.6;
+}
+.pv-segs .is-done {
+  background: var(--red);
+}
+.pv-segs .is-now {
+  background: repeating-linear-gradient(90deg, var(--red) 0 6px, var(--line) 6px 12px);
+}
+.final__h {
+  max-width: 15ch;
+}

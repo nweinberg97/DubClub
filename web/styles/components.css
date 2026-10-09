@@ -980,3 +980,179 @@
   font-size: var(--fs-4);
   margin-bottom: var(--s3);
 }
+
+/* ─── Cuts (accent picker): every accent is another version of your video ─── */
+.cuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+}
+.cut,
+.versions__orig {
+  --w: 184px;
+  width: var(--w);
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--chalk);
+  text-align: left;
+}
+.cut {
+  cursor: pointer;
+  transition: transform var(--t-med) var(--ease-snap);
+}
+.cut:hover:not(:disabled) {
+  transform: translateY(-4px);
+}
+.cut:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.cut__thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(-60deg, transparent 0 14px, rgb(255 255 255 / 0.03) 14px 28px),
+    var(--court-2);
+  box-shadow: inset 0 0 0 2px var(--line);
+  transition: box-shadow var(--t-fast);
+}
+.cut__code {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 3.25rem;
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: var(--chalk);
+  transition: color var(--t-fast);
+}
+.cut__tag {
+  position: absolute;
+  right: 6px;
+  bottom: 10px;
+  padding: 2px 6px;
+  background: rgb(0 0 0 / 0.85);
+  color: var(--chalk);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+/* the red "watched" bar fills when you pick a cut */
+.cut__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 5px;
+  width: 0;
+  background: var(--red);
+  transition: width 420ms var(--ease-out);
+}
+.cut:hover .cut__bar {
+  width: 22%;
+}
+.cut__check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--red);
+  display: grid;
+  place-items: center;
+  animation: pop 320ms var(--ease-snap);
+}
+.cut__check::after {
+  content: '';
+  width: 7px;
+  height: 12px;
+  border: solid var(--black);
+  border-width: 0 3px 3px 0;
+  transform: translateY(-2px) rotate(45deg);
+}
+.cut__label {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.cut__place {
+  font-size: 0.8125rem;
+  color: var(--steel);
+}
+.cut[aria-checked='true'] .cut__thumb {
+  box-shadow: inset 0 0 0 3px var(--red);
+}
+.cut[aria-checked='true'] .cut__code,
+.cut[aria-checked='true'] .cut__label {
+  color: var(--red);
+}
+.cut[aria-checked='true'] .cut__bar {
+  width: 100%;
+}
+.cut__thumb--orig {
+  background: var(--chalk);
+  box-shadow: none;
+}
+.cut__thumb--orig .cut__code {
+  color: var(--black);
+}
+.cuts--sm .cut {
+  --w: 150px;
+}
+.cuts--sm .cut__code {
+  font-size: 2.5rem;
+}
+@media (max-width: 560px) {
+  .cuts {
+    gap: 12px;
+  }
+  .cut,
+  .cuts--sm .cut,
+  .versions__orig {
+    --w: calc((100vw - 2 * var(--gutter) - 12px) / 2);
+  }
+}
+
+/* Hero: original → versions */
+.versions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--s4);
+}
+.versions__arrow {
+  position: relative;
+  width: 44px;
+  height: 3px;
+  margin-top: calc(184px * 9 / 32);
+  background: var(--chalk);
+}
+.versions__arrow::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: -6px;
+  border: 7px solid transparent;
+  border-left: 10px solid var(--chalk);
+  border-right: 0;
+}
+@media (max-width: 560px) {
+  .versions__arrow {
+    display: none;
+  }
+}

@@ -1,14 +1,14 @@
 import type { JobInfo } from '../../shared/types.ts';
 
 const STAGES: Array<{ id: JobInfo['stage']; q: string; label: string }> = [
-  { id: 'waiting', q: 'Pre', label: 'In the queue' },
-  { id: 'preparing', q: 'Q1', label: 'Finding the pauses' },
-  { id: 'converting', q: 'Q2', label: 'Dubbing' },
-  { id: 'stitching', q: 'Q3', label: 'Stitching it back' },
+  { id: 'waiting', q: 'Queued', label: 'Waiting for a slot' },
+  { id: 'preparing', q: 'Prep', label: 'Finding the pauses' },
+  { id: 'converting', q: 'Dub', label: 'Dubbing your take' },
+  { id: 'stitching', q: 'Export', label: 'Stitching it back' },
 ];
 
 /**
- * Scoreboard status. Every quarter is a real pipeline stage reported by the server,
+ * Render-queue status. Every step is a real pipeline stage reported by the server,
  * and the bar only moves on real segment counts — never a timer.
  */
 export function DubStatus({ job, onCancel }: { job: JobInfo | null; onCancel: () => void }) {
@@ -21,7 +21,7 @@ export function DubStatus({ job, onCancel }: { job: JobInfo | null; onCancel: ()
     <div className="board" aria-busy="true">
       <div className="board__top">
         <span className="board__live">
-          <span className="board__dot" aria-hidden="true" /> Live
+          <span className="board__dot" aria-hidden="true" /> Rendering
         </span>
         <p className="board__now" role="status" aria-live="polite">
           {now.label}

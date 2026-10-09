@@ -10,15 +10,9 @@ interface Props {
   size?: 'lg' | 'sm';
 }
 
-/** Stable "squad number" per accent so each jersey has its own identity. */
-function numberFor(id: string) {
-  let h = 0;
-  for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 97;
-  return String((h % 89) + 2).padStart(2, '0');
-}
-
 /**
- * Pick your side: each accent is a jersey. Radio group — arrow keys move, the picked jersey goes red.
+ * Accents as "cuts" — each one is another version of your video, shown as a thumbnail tile.
+ * Radio group: arrow keys move; the picked cut gets the red watched-bar and a check.
  */
 export function StampPicker({ accents, value, onChange, disabled, label = 'Target accent', size = 'lg' }: Props) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -34,7 +28,7 @@ export function StampPicker({ accents, value, onChange, disabled, label = 'Targe
   };
 
   return (
-    <div className={`jerseys jerseys--${size}`} role="radiogroup" aria-label={label} onKeyDown={onKey}>
+    <div className={`cuts cuts--${size}`} role="radiogroup" aria-label={label} onKeyDown={onKey}>
       {accents.map((a, i) => {
         const on = a.id === value;
         return (
@@ -47,26 +41,19 @@ export function StampPicker({ accents, value, onChange, disabled, label = 'Targe
             role="radio"
             aria-checked={on}
             tabIndex={on || (!value && i === 0) ? 0 : -1}
-            className="jersey"
+            className="cut"
             disabled={disabled}
             onClick={() => onChange(a.id)}
             title={a.note}
           >
-            <svg className="jersey__shirt" viewBox="0 0 120 132" aria-hidden="true">
-              <path
-                className="jersey__body"
-                d="M34 4c4 12 14 18 26 18S82 16 86 4l22 8c-6 16-8 28-6 42l4 74H14l4-74c2-14 0-26-6-42z"
-              />
-              <path className="jersey__trim" d="M34 4c4 12 14 18 26 18S82 16 86 4" />
-              <text className="jersey__code" x="60" y="66" textAnchor="middle">
-                {a.stampCode}
-              </text>
-              <text className="jersey__num" x="60" y="108" textAnchor="middle">
-                {numberFor(a.id)}
-              </text>
-            </svg>
-            <span className="jersey__label">{a.label}</span>
-            <span className="jersey__place">{a.place}</span>
+            <span className="cut__thumb" aria-hidden="true">
+              <span className="cut__code">{a.stampCode}</span>
+              <span className="cut__tag">{a.stampCode} cut</span>
+              <span className="cut__bar" />
+              {on && <span className="cut__check" />}
+            </span>
+            <span className="cut__label">{a.label}</span>
+            <span className="cut__place">{a.place}</span>
           </button>
         );
       })}

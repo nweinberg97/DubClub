@@ -234,7 +234,7 @@ export function ABPlayer({ original, dub, dubPlaceholder, labelA = 'Original', l
       <audio ref={audioB} src={b.url ?? undefined} preload="auto" onEnded={onEnded} />
 
       <div className="deck__bar" aria-hidden="true">
-        <span className="deck__title">Instant replay</span>
+        <span className="deck__title">A/B check</span>
         <span className="deck__vs">
           {labelA} <i>vs</i> {labelB}
         </span>
@@ -248,7 +248,7 @@ export function ABPlayer({ original, dub, dubPlaceholder, labelA = 'Original', l
           disabled={!ready}
         >
           <span className="deck__key" aria-hidden="true">A</span>
-          <span className="deck__side" aria-hidden="true">Home</span>
+          <span className="deck__side" aria-hidden="true">Before</span>
           <span className="deck__name">{labelA}</span>
           <span className="deck__meter" style={side === 'A' ? meterStyle : undefined} aria-hidden="true" />
         </button>
@@ -275,7 +275,7 @@ export function ABPlayer({ original, dub, dubPlaceholder, labelA = 'Original', l
           disabled={!hasB}
         >
           <span className="deck__key" aria-hidden="true">B</span>
-          <span className="deck__side" aria-hidden="true">Away</span>
+          <span className="deck__side" aria-hidden="true">After</span>
           <span className="deck__name">{labelB}</span>
           <span className="deck__meter" style={side === 'B' ? meterStyle : undefined} aria-hidden="true" />
         </button>

@@ -19,7 +19,7 @@ console.log('deep link /studio ok');
 await p.locator('input[type=file]').setInputFiles('/tmp/qa-take.wav');
 await p.getByText('qa-take.wav').first().waitFor({ timeout: 30000 });
 await p.getByLabel(/It’s my voice/).check();
-await p.getByRole('button', { name: /^Run it back/ }).click();
+await p.getByRole('button', { name: /^Make the/ }).click();
 await p.getByText('Done. Flip').waitFor({ timeout: 60000 });
 const [dl] = await Promise.all([p.waitForEvent('download'), p.getByRole('button', { name: 'Download MP3' }).click()]);
 console.log('cross-origin dub + download ok:', dl.suggestedFilename());

@@ -9,7 +9,7 @@ for (const [n, vp] of [['desktop',{width:1440,height:900}],['mobile',{width:390,
   await p.locator('input[type=file]').setInputFiles(f);
   await p.getByText('qa-take.wav').first().waitFor();
   await p.getByLabel(/It’s my voice/).check();
-  await p.getByRole('button', { name: /^Run it back/ }).click();
+  await p.getByRole('button', { name: /^Make the/ }).click();
   await p.waitForTimeout(150);
   await p.screenshot({ path: `qa/screens/working-${n}.png`, fullPage: true });
   await p.getByText('Done. Flip').waitFor();

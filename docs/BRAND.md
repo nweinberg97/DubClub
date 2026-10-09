@@ -1,22 +1,22 @@
 # Dub Club — brand system v2 ("League")
 
 ## Direction
-Inspired by the energy of sports-culture creative (the kind of work agencies like Victory Creative Group make
-for Nike and the NBA): loud, confident, built for game day. Dub Club is a team you join, your accent is the side
-you pick, and every dub is a replay. Fun comes from attitude, motion and wordplay, not from clutter.
+The energy of sports-culture creative (the kind of work agencies like Victory Creative Group make for Nike and the NBA) —
+loud, confident, italic, fast — pointed at creators. The core idea: **one take, every version.** Your recording is the
+original; each accent is another cut of it, like versions of a video.
 
 **Tagline.** Same voice. New accent.
-**Rallying cry / CTA.** Run it back.
+**Main CTA.** Start dubbing. **Closer.** Give that take another take.
 
 ## Language system
-| Product moment | Sports framing |
+| Product moment | Creator framing |
 |---|---|
 | Upload | Drop your take |
-| Choose accent | Pick your side (jerseys) |
-| Process | Run it back — status shown as quarters (Q1 pauses, Q2 dubbing, Q3 stitching) |
-| Compare | Instant replay — Home (original) vs Away (dub) |
-| Export | Take it home |
-| How it works / Use cases / Capabilities / Privacy / FAQ | The playbook / The roster / Stat sheet / House rules / Press conference |
+| Choose accent | Pick your cut — accents are thumbnail tiles ("GB cut") with a red watched-bar when picked |
+| Process | Dub it — status is a render queue (Queued, Prep, Dub, Export), real stages only |
+| Compare | Check it — A/B check, Before vs After |
+| Export | Post it |
+| Sections | From take to post / Built for creators / What's in the studio / Your voice, your rules / Questions, answered |
 
 Plain English stays plain where trust matters: privacy answers, errors, limits and the test-mode notice.
 
@@ -28,12 +28,12 @@ Plain English stays plain where trust matters: privacy answers, errors, limits a
   DC Sans (subset of TeX Gyre Heros) for reading text.
 - **Speed trail.** Outlined repeats chase a headline from behind, like a replay ghosting on a jumbotron
   (and a nod to dub delay). Hero, final call, social card only.
-- **Shapes.** Slanted parallelograms for primary buttons, step numbers, chips and meters. Court lines (centre circle)
-  in the hero. Jerseys for accents. One gold sticker.
+- **Shapes.** Slanted parallelograms for primary buttons, step numbers, chips and meters. A big outlined circle in the
+  hero. 16:9 thumbnail tiles for accents. One gold sticker ("No re-records").
 - **Ticker.** A tilted scoreboard strip under the hero; it shows real accents, or "test mode" when no engine is connected.
 
 ## Motion
 - Load: trails slide out of the headline, sticker slaps on. Ticker scrolls.
-- Response: buttons nudge forward, jerseys lift and pop when picked, live dot blinks only during real work,
+- Response: buttons nudge forward, cut tiles lift, fill their watched-bar and get a check when picked, live dot blinks only during real work,
   deck meters follow real audio level.
 - `prefers-reduced-motion` turns it all off.
