@@ -97,7 +97,7 @@ try {
   // Compare flips at the same moment
   await page.locator('.cmp__play').click();
   await page.waitForTimeout(900);
-  await page.getByRole('button', { name: 'Original', exact: true }).click();
+  await page.locator('.cmp').getByRole('button', { name: 'Original', exact: true }).click();
   await page.waitForTimeout(600);
   const st = await page.evaluate(() => {
     const [a, b] = document.querySelectorAll('.cmp audio');
