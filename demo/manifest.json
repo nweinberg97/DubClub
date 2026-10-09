@@ -1,0 +1,9 @@
+{
+  "speaker": "John",
+  "text": "Hey, my name is John — and welcome back to the channel.",
+  "original": "original.mp3",
+  "cuts": {
+    "en-GB": "en-GB.mp3"
+  },
+  "note": "John is a sample American voice. The British cut is that exact recording run through Dub Club in a browser."
+}

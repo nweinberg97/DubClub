@@ -1,0 +1,33 @@
+
+> dubclub@0.1.0 e2e
+> node scripts/e2e.mjs
+
+PASS  landing loads
+PASS  two accents offered
+PASS  mic recording captured
+PASS  dub disabled until consent
+PASS  British dub completes in the browser — 39.7s including first model download
+PASS  engine heard the words — Heard: “Hello, my name is John. Today I want to see if I can pull off a British accent.”
+PASS  compare plays and flips at the same moment — {"aPlaying":true,"bPaused":true,"aTime":1.41753}
+PASS  download is a valid WAV — dubclub (British).wav 7.44s
+PASS  second accent reuses loaded models — 21.5s
+PASS  bad file rejected with a message
+PASS  uploaded file dubs
+PASS  only talks to this site and the model host
+PASS  no audio uploaded (no POST/PUT requests)
+PASS  mobile menu opens
+PASS  no horizontal scroll on mobile / — overflow 0px
+PASS  no horizontal scroll on mobile /studio — overflow 0px
+PASS  skip link is first in tab order
+PASS  no uncaught page errors
+PASS  downloaded dub says the same words — "Hello, my name is John. Today I want to see if I can pull off a British accent."
+{
+  "first_dub_seconds": 39.705,
+  "second_dub_seconds": 21.486,
+  "upload_dub_seconds": 31.443,
+  "model_download_mb": 172,
+  "model_requests": 26,
+  "british_transcript": "Hello, my name is John. Today I want to see if I can pull off a British accent."
+}
+
+19/19 checks passed
