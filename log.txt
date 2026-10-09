@@ -1,0 +1,394 @@
+PKG kokoro-js 1.2.1 Apache-2.0 {"types":"./types/kokoro.d.ts","node":{"import":"./dist/kokoro.js","require":"./dist/kokoro.cjs"},"default":"./dist/kokoro.js"}
+PKG @huggingface/transformers 3.8.1 Apache-2.0 {"node":{"import":{"types":"./types/transformers.d.ts","default":"./dist/transformers.node.mjs"},"require":{"types":"./types/transformers.d.ts","default":"./dist/transformers.node.cjs"}},"default":{"types":"./types/transformers.d.ts","default":"./dist/transformers.web.js"}}
+PKG onnxruntime-web 1.22.0-dev.20250409-89f8206ba4 MIT {".":{"node":{"import":"./dist/ort.node.min.mjs","require":"./dist/ort.node.min.js"},"import":{"onnxruntime-web-use-extern-wasm":"./dist/ort.min.mjs","default":"./dist/ort.bundle.min.mjs"},"require":"./dist/ort.min.js"},"./all":{"import":{"onnxruntime-web-use-extern-wasm":"./dist/ort.all.min.mjs","default":"./dist/ort.all.bundle.min.mjs"},"require":"./dist/ort.all.min.js"},"./wasm":{"import":{"onnxruntime-web-use-extern-wasm":"./dist/ort.wasm.min.mjs","default":"./dist/ort.wasm.bundle.min.mjs"},"require":"./dist/ort.wasm.min.js"},"./webgl":{"import":"./dist/ort.webgl.min.mjs","require":"./dist
+PKG phonemizer 1.2.1 Apache-2.0 {"types":"./types/phonemizer.d.ts","node":{"import":"./dist/phonemizer.js","require":"./dist/phonemizer.cjs"},"default":"./dist/phonemizer.js"}
+node_modules/kokoro-js:
+LICENSE
+README.md
+dist
+package.json
+types
+voices
+
+node_modules/kokoro-js/dist:
+kokoro.cjs
+kokoro.js
+kokoro.web.js
+
+node_modules/onnxruntime-web/dist:
+ort-wasm-simd-threaded.jsep.mjs
+ort-wasm-simd-threaded.jsep.wasm
+ort-wasm-simd-threaded.mjs
+ort-wasm-simd-threaded.wasm
+ort.all.bundle.min.mjs
+ort.all.bundle.min.mjs.map
+ort.all.js
+ort.all.min.js
+ort.all.min.js.map
+ort.all.min.mjs
+ort.all.min.mjs.map
+ort.all.mjs
+ort.bundle.min.mjs
+ort.bundle.min.mjs.map
+ort.js
+ort.min.js
+ort.min.js.map
+ort.min.mjs
+ort.min.mjs.map
+ort.mjs
+ort.node.min.js
+ort.node.min.js.map
+ort.node.min.mjs
+ort.node.min.mjs.map
+ort.wasm.bundle.min.mjs
+ort.wasm.bundle.min.mjs.map
+ort.wasm.js
+ort.wasm.min.js
+ort.wasm.min.js.map
+ort.wasm.min.mjs
+ort.wasm.min.mjs.map
+ort.wasm.mjs
+ort.webgl.js
+ort.webgl.min.js
+ort.webgl.min.js.map
+ort.webgl.min.mjs
+ort.webgl.min.mjs.map
+ort.webgl.mjs
+ort.webgpu.bundle.min.mjs
+ort.webgpu.bundle.min.mjs.map
+ort.webgpu.js
+ort.webgpu.min.js
+ort.webgpu.min.js.map
+ort.webgpu.min.mjs
+ort.webgpu.min.mjs.map
+ort.webgpu.mjs
+ort-wasm-simd-threaded.jsep.mjs
+ort-wasm-simd-threaded.jsep.wasm
+transformers.js
+transformers.js.map
+transformers.min.js
+transformers.min.js.map
+transformers.node.cjs
+transformers.node.cjs.map
+transformers.node.min.cjs
+transformers.node.min.cjs.map
+transformers.node.min.mjs
+transformers.node.min.mjs.map
+transformers.node.mjs
+transformers.node.mjs.map
+transformers.web.js
+transformers.web.js.map
+transformers.web.min.js
+transformers.web.min.js.map
+# Kokoro TTS
+
+<p align="center">
+    <a href="https://www.npmjs.com/package/kokoro-js"><img alt="NPM" src="https://img.shields.io/npm/v/kokoro-js"></a>
+    <a href="https://www.npmjs.com/package/kokoro-js"><img alt="NPM Downloads" src="https://img.shields.io/npm/dw/kokoro-js"></a>
+    <a href="https://www.jsdelivr.com/package/npm/kokoro-js"><img alt="jsDelivr Hits" src="https://img.shields.io/jsdelivr/npm/hw/kokoro-js"></a>
+    <a href="https://github.com/hexgrad/kokoro/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/hexgrad/kokoro?color=blue"></a>
+    <a href="https://huggingface.co/spaces/webml-community/kokoro-webgpu"><img alt="Demo" src="https://img.shields.io/badge/Hugging_Face-demo-green"></a>
+</p>
+
+Kokoro is a frontier TTS model for its size of 82 million parameters (text in/audio out). This JavaScript library allows the model to be run 100% locally in the browser thanks to [🤗 Transformers.js](https://huggingface.co/docs/transformers.js). Try it out using our [online demo](https://huggingface.co/spaces/webml-community/kokoro-webgpu)!
+
+## Usage
+
+First, install the `kokoro-js` library from [NPM](https://npmjs.com/package/kokoro-js) using:
+
+```bash
+npm i kokoro-js
+```
+
+You can then generate speech as follows:
+
+```js
+import { KokoroTTS } from "kokoro-js";
+
+const model_id = "onnx-community/Kokoro-82M-v1.0-ONNX";
+const tts = await KokoroTTS.from_pretrained(model_id, {
+  dtype: "q8", // Options: "fp32", "fp16", "q8", "q4", "q4f16"
+  device: "wasm", // Options: "wasm", "webgpu" (web) or "cpu" (node). If using "webgpu", we recommend using dtype="fp32".
+});
+
+const text = "Life is like a box of chocolates. You never know what you're gonna get.";
+const audio = await tts.generate(text, {
+  // Use `tts.list_voices()` to list all available voices
+  voice: "af_heart",
+});
+audio.save("audio.wav");
+```
+
+Or if you'd prefer to stream the output, you can do that with:
+
+```js
+import { KokoroTTS, TextSplitterStream } from "kokoro-js";
+
+const model_id = "onnx-community/Kokoro-82M-v1.0-ONNX";
+const tts = await KokoroTTS.from_pretrained(model_id, {
+  dtype: "fp32", // Options: "fp32", "fp16", "q8", "q4", "q4f16"
+  // device: "webgpu", // Options: "wasm", "webgpu" (web) or "cpu" (node).
+});
+
+// First, set up the stream
+const splitter = new TextSplitterStream();
+const stream = tts.stream(splitter);
+(async () => {
+  let i = 0;
+  for await (const { text, phonemes, audio } of stream) {
+    console.log({ text, phonemes });
+    audio.save(`audio-${i++}.wav`);
+  }
+})();
+
+// Next, add text to the stream. Note that the text can be added at different times.
+// For this example, let's pretend we're consuming text from an LLM, one word at a time.
+const text = "Kokoro is an open-weight TTS model with 82 million parameters. Despite its lightweight architecture, it delivers comparable quality to larger models while being significantly faster and more cost-efficient. With Apache-licensed weights, Kokoro can be deployed anywhere from production environments to personal projects. It can even run 100% locally in your browser, powered by Transformers.js!";
+const tokens = text.match(/\s*\S+/g);
+for (const token of tokens) {
+  splitter.push(token);
+  await new Promise((resolve) => setTimeout(resolve, 10));
+}
+
+// Finally, close the stream to signal that no more text will be added.
+splitter.close();
+
+// Alternatively, if you'd like to keep the stream open, but flush any remaining text, you can use the `flush` method.
+// splitter.flush();
+```
+
+## Voices/Samples
+
+> [!TIP]
+> You can find samples for each of the voices in the [model card](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX#samples) on Hugging Face.
+
+### American English
+
+| Name         | Traits | Target Quality | Training Duration | Overall Grade |
+| ------------ | ------ | -------------- | ----------------- | ------------- |
+| **af_heart** | 🚺❤️   |                |                   | **A**         |
+| af_alloy     | 🚺     | B              | MM minutes        | C             |
+| af_aoede     | 🚺     | B              | H hours           | C+            |
+| af_bella     | 🚺🔥   | **A**          | **HH hours**      | **A-**        |
+| af_jessica   | 🚺     | C              | MM minutes        | D             |
+| af_kore      | 🚺     | B              | H hours           | C+            |
+| af_nicole    | 🚺🎧   | B              | **HH hours**      | B-            |
+| af_nova      | 🚺     | B              | MM minutes        | C             |
+| af_river     | 🚺     | C              | MM minutes        | D             |
+| af_sarah     | 🚺     | B              | H hours           | C+            |
+| af_sky       | 🚺     | B              | _M minutes_ 🤏    | C-            |
+| am_adam      | 🚹     | D              | H hours           | F+            |
+| am_echo      | 🚹     | C              | MM minutes        | D             |
+| am_eric      | 🚹     | C              | MM minutes        | D             |
+| am_fenrir    | 🚹     | B              | H hours           | C+            |
+| am_liam      | 🚹     | C              | MM minutes        | D             |
+| am_michael   | 🚹     | B              | H hours           | C+            |
+| am_onyx      | 🚹     | C              | MM minutes        | D             |
+| am_puck      | 🚹     | B              | H hours           | C+            |
+| am_santa     | 🚹     | C              | _M minutes_ 🤏    | D-            |
+
+### British English
+
+| Name        | Traits | Target Quality | Training Duration | Overall Grade |
+| ----------- | ------ | -------------- | ----------------- | ------------- |
+| bf_alice    | 🚺     | C              | MM minutes        | D             |
+| bf_emma     | 🚺     | B              | **HH hours**      | B-            |
+| bf_isabella | 🚺     | B              | MM minutes        | C             |
+| bf_lily     | 🚺     | C              | MM minutes        | D             |
+| bm_daniel   | 🚹     | C              | MM minutes        | D             |
+| bm_fable    | 🚹     | B              | MM minutes        | C             |
+| bm_george   | 🚹     | B              | MM minutes        | C             |
+| bm_lewis    | 🚹     | C              | H hours           | D+            |
+kokoro.d.ts
+kokoro.d.ts.map
+phonemize.d.ts
+phonemize.d.ts.map
+splitter.d.ts
+splitter.d.ts.map
+voices.d.ts
+voices.d.ts.map
+/**
+ * @typedef {Object} GenerateOptions
+ * @property {keyof typeof VOICES} [voice="af_heart"] The voice
+ * @property {number} [speed=1] The speaking speed
+ */
+/**
+ * @typedef {Object} StreamProperties
+ * @property {RegExp} [split_pattern] The pattern to split the input text. If unset, the default sentence splitter will be used.
+ * @typedef {GenerateOptions & StreamProperties} StreamGenerateOptions
+ */
+export class KokoroTTS {
+    /**
+     * Load a KokoroTTS model from the Hugging Face Hub.
+     * @param {string} model_id The model id
+     * @param {Object} options Additional options
+     * @param {"fp32"|"fp16"|"q8"|"q4"|"q4f16"} [options.dtype="fp32"] The data type to use.
+     * @param {"wasm"|"webgpu"|"cpu"|null} [options.device=null] The device to run the model on.
+     * @param {import("@huggingface/transformers").ProgressCallback} [options.progress_callback=null] A callback function that is called with progress information.
+     * @returns {Promise<KokoroTTS>} The loaded model
+     */
+    static from_pretrained(model_id: string, { dtype, device, progress_callback }?: {
+        dtype?: "fp32" | "fp16" | "q8" | "q4" | "q4f16";
+        device?: "wasm" | "webgpu" | "cpu" | null;
+        progress_callback?: import("@huggingface/transformers").ProgressCallback;
+    }): Promise<KokoroTTS>;
+    /**
+     * Create a new KokoroTTS instance.
+     * @param {import('@huggingface/transformers').StyleTextToSpeech2Model} model The model
+     * @param {import('@huggingface/transformers').PreTrainedTokenizer} tokenizer The tokenizer
+     */
+    constructor(model: import("@huggingface/transformers").StyleTextToSpeech2Model, tokenizer: import("@huggingface/transformers").PreTrainedTokenizer);
+    model: StyleTextToSpeech2Model;
+    tokenizer: import("@huggingface/transformers").PreTrainedTokenizer;
+    get voices(): Readonly<{
+        af_heart: {
+            name: string;
+            language: string;
+            gender: string;
+            traits: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_alloy: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_aoede: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_bella: {
+            name: string;
+            language: string;
+            gender: string;
+            traits: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_jessica: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_kore: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_nicole: {
+            name: string;
+            language: string;
+            gender: string;
+            traits: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_nova: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_river: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_sarah: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        af_sky: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_adam: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_echo: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_eric: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_fenrir: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_liam: {
+            name: string;
+            language: string;
+            gender: string;
+            targetQuality: string;
+            overallGrade: string;
+        };
+        am_michael: {
+af_alloy
+af_aoede
+af_bella
+af_heart
+af_jessica
+af_kore
+af_nicole
+af_nova
+af_river
+af_sarah
+af_sky
+am_adam
+am_echo
+am_eric
+am_fenrir
+am_liam
+am_michael
+am_onyx
+am_puck
+am_santa
+bf_alice
+bf_emma
+bf_isabella
+bf_lily
+bm_daniel
+bm_fable
+bm_george
+bm_lewis
+
+kokoro load ms 1363 voices af_heart,af_alloy,af_aoede,af_bella,af_jessica,af_kore,af_nicole,af_nova,af_river,af_sarah,af_sky,am_adam,am_echo,am_eric,am_fenrir,am_liam,am_michael,am_onyx,am_puck,am_santa,bf_emma,bf_isabella,bm_george,bm_lewis,bf_alice,bf_lily,bm_daniel,bm_fable
+gen bm_george [ 'audio', 'sampling_rate' ] 24000 4.275 ms 4990
+gen am_michael [ 'audio', 'sampling_rate' ] 24000 4.425 ms 5360
+whisper load ms 1536
+ASR {"text":" Hello, my name is John, today I want to see if I can pull off a British accent.","chunks":[{"text":" Hello,","timestamp":[0,0.4]},{"text":" my","timestamp":[0.72,0.88]},{"text":" name","timestamp":[0.88,1.12]},{"text":" is","timestamp":[1.12,1.36]},{"text":" John,","timestamp":[1.36,1.58]},{"text":" today","timestamp":[2.14,2.42]},{"text":" I","timestamp":[2.42,2.68]},{"text":" want","timestamp":[2.68,2.94]},{"text":" to","timestamp":[2.94,3.2]},{"text":" see","timestamp":[3.2,3.44]},{"text":" if","timestamp":[3.44,3.76]},{"text":" I","timestamp":[3.76,3.88]},{"text":" can","timestamp":[3.88,4.08]},{"text":" pull","timestamp":[4.08,4.32]},{"text":" off","timestamp":[4.32,4.68]},{"text":" a","timestamp":[4.68,4.76]},{"text":" British","timestamp":[4.76,5.08]},{"text":" accent.","timestamp":[5.08,5.62]}]}
+ASR kokoro {"text":" Hello, my name is John and welcome back to the channel.","chunks":[{"text":" Hello,","timestamp":[0.1,0.56]},{"text":" my","timestamp":[0.78,0.92]},{"text":" name","timestamp":[0.92,1.16]},{"text":" is","timestamp":[1.16,1.42]},{"text":" John","timestamp":[1.42,1.64]},{"text":" and","timestamp":[1.64,2.22]},{"text":" welcome","timestamp":[2.22,2.54]},{"text":" back","timestamp":[2.54,2.88]},{"text":" to","timestamp":[2.88,3.08]},{"text":" the","timestamp":[3.08,3.2]},{"text":" channel.","timestamp":[3.2,3.62]}]}
