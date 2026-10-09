@@ -21,8 +21,11 @@ export function securityHeaders(res: ServerResponse) {
       "media-src 'self' blob:",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self'",
-      "script-src 'self'",
-      "connect-src 'self'",
+      // 'wasm-unsafe-eval' lets the in-browser engine run ONNX Runtime's WebAssembly (no JS eval).
+      "script-src 'self' 'wasm-unsafe-eval'",
+      "worker-src 'self' blob:",
+      // Open model files are fetched from Hugging Face (and its CDN hosts). Audio never goes this way.
+      "connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co",
       "frame-ancestors 'none'",
       "base-uri 'none'",
       "form-action 'self'",

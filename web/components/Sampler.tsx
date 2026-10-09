@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Capabilities } from '../../shared/types.ts';
 import { ACCENT_CATALOG } from '../../shared/accents.ts';
 import { BASE } from '../lib/env.ts';
 import { PHOTOS, unsplash } from '../lib/photos.ts';
@@ -30,7 +29,7 @@ interface Option {
 
 const LINE = 'Hey, my name is John — and welcome back to the channel.';
 
-export function Sampler({ caps }: { caps: Capabilities | null }) {
+export function Sampler() {
   const [manifest, setManifest] = useState<Manifest | null>(null);
   const [options, setOptions] = useState<Option[] | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
@@ -47,7 +46,7 @@ export function Sampler({ caps }: { caps: Capabilities | null }) {
   }, []);
 
   useEffect(() => {
-    const accentIds = caps?.accents.map((a) => a.id).filter((id) => id !== 'en-US') ?? ['en-GB', 'en-AU'];
+    const accentIds = ['en-GB'];
     if (manifest) {
       setOptions([
         { id: 'original', label: 'Original', src: `${BASE}/demo/${manifest.original}` },
@@ -74,7 +73,7 @@ export function Sampler({ caps }: { caps: Capabilities | null }) {
     return () => {
       alive = false;
     };
-  }, [caps, manifest]);
+  }, [manifest]);
 
   useEffect(() => () => stop(), []); // eslint-disable-line react-hooks/exhaustive-deps
 

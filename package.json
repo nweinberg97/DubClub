@@ -2,7 +2,7 @@
   "name": "dubclub",
   "version": "0.1.0",
   "private": true,
-  "description": "Dub Club \u2014 same voice, new postcode. Accent transformation studio for creators.",
+  "description": "Dub Club \u2014 your words, new accent. Record, pick British or American, download. Runs in the browser with open-source models.",
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -19,6 +19,8 @@
     "check": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "kokoro-js": "1.2.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tsx": "^4.20.0"

@@ -1,84 +1,48 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import type { Capabilities } from '../../shared/types.ts';
-import { download } from '../lib/api.ts';
 import { formatTime } from '../lib/audio.ts';
-import { useDub } from '../lib/hooks.ts';
+import { LIMITS, saveBlob, useLocalDub } from '../engine/client.ts';
+import { ENGINE_ACCENTS, type EngineAccent } from '../engine/protocol.ts';
+
+/** Size of the open models fetched on first use (Whisper base + Kokoro, quantised). Measured in CI. */
+const MODEL_MB = 170;
 
 /**
  * The whole product on one card: record → pick an accent → dub → listen → download.
- * Uploading a file is a secondary path for people who already have a recording.
+ * Everything runs in the visitor's browser with open-source models; the recording is never uploaded.
  */
-export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsError: string | null }) {
-  const dub = useDub();
+export function QuickDub() {
+  const dub = useLocalDub();
   const { state } = dub;
-  const [accent, setAccent] = useState<string | null>(null);
+  const [accent, setAccent] = useState<EngineAccent>('en-GB');
+  const [voice, setVoice] = useState<'auto' | 'male' | 'female'>('auto');
   const [consent, setConsent] = useState(false);
-  const [dlError, setDlError] = useState<string | null>(null);
-  const [downloading, setDownloading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const consentId = useId();
 
-  useEffect(() => {
-    if (caps && (!accent || !caps.accents.some((a) => a.id === accent))) setAccent(caps.accents[0]?.id ?? null);
-  }, [caps]); // eslint-disable-line react-hooks/exhaustive-deps
+  const accentOpt = ENGINE_ACCENTS.find((a) => a.id === (state.result?.accent ?? accent))!;
+  const take = state.take;
+  const working = state.phase === 'dubbing' || state.phase === 'reading';
+  const canDub = !!take && consent && state.phase === 'ready';
+  const go = () => dub.start(accent, voice === 'auto' ? undefined : voice);
 
-  const offline = !caps && !!capsError;
-  const engine = caps?.engine;
-  const accentOpt = caps?.accents.find((a) => a.id === (state.job?.accent ?? accent));
-  const hasTake = !!state.upload;
-  const working = state.phase === 'uploading' || state.phase === 'dubbing';
-  const canDub = hasTake && !!accent && consent && !!engine?.ready && state.phase === 'ready';
-
-  const doDownload = async () => {
-    if (!state.job) return;
-    setDlError(null);
-    setDownloading(true);
-    try {
-      await download(`/api/jobs/${state.job.id}/export?format=mp3`, 'dub.mp3');
-    } catch (e) {
-      setDlError((e as Error).message);
-    } finally {
-      setDownloading(false);
-    }
+  const pick = (b: Blob, name: string, fromMic: boolean) => void dub.setTake(b, name, fromMic);
+  const doDownload = () => {
+    if (!state.result) return;
+    const base = take && !take.fromMic ? take.name.replace(/\.[^.]+$/, '') : 'dubclub';
+    saveBlob(state.result.wav, `${base} (${accentOpt.label}).wav`);
   };
-
-  const startOver = () => {
-    void dub.remove();
-    setDlError(null);
-  };
-
-  if (offline) {
-    return (
-      <div className="qd">
-        <div className="qd__offline">
-          <span className="qd__offdot" aria-hidden="true" />
-          <div>
-            <p className="qd__title">The dubbing studio is offline right now.</p>
-            <p className="qd__muted">This page is up, but the server that processes recordings isn’t running yet. Check back soon.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="qd">
-      {engine?.kind === 'dev-passthrough' && (
-        <p className="qd__note">Test mode: no accent engine is connected, so your dub will sound like the original.</p>
-      )}
-      {engine?.kind === 'voice-swap' && (
-        <p className="qd__note qd__note--info">Your words and timing stay the same, re-spoken by a voice with the accent you pick.</p>
-      )}
-
       {/* ① Record */}
-      {state.phase === 'done' ? null : (
+      {state.phase !== 'done' && (
         <div className="qd__section">
           <p className="qd__label">
             <span className="qd__n">1</span> Record yourself
           </p>
-          {!hasTake && state.phase !== 'uploading' ? (
+          {!take && state.phase !== 'reading' ? (
             <>
-              <Recorder disabled={working} onDone={(b, n) => void dub.sendFile(b, n)} />
+              <Recorder disabled={working} onStart={dub.warm} onDone={(b) => pick(b, 'Your recording', true)} />
               <p className="qd__muted qd__alt">
                 Already have a recording?{' '}
                 <button type="button" className="qd__link" onClick={() => fileInput.current?.click()}>
@@ -88,32 +52,35 @@ export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsE
               <input
                 ref={fileInput}
                 type="file"
-                accept={(caps?.limits.acceptedExtensions ?? ['mp3', 'wav', 'm4a', 'webm', 'mp4']).map((e) => '.' + e).join(',')}
+                accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.opus,.flac,.webm,.mp4,.mov,.m4v"
                 className="sr-only"
                 tabIndex={-1}
                 aria-hidden="true"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
-                  if (f) void dub.sendFile(f, f.name);
+                  if (f) {
+                    dub.warm();
+                    pick(f, f.name, false);
+                  }
                   e.target.value = '';
                 }}
               />
             </>
-          ) : state.phase === 'uploading' ? (
+          ) : state.phase === 'reading' ? (
             <div className="qd__take">
               <span className="qd__spinner" aria-hidden="true" />
               <span className="qd__muted" role="status">
-                {state.uploadProgress >= 1 ? 'Checking your recording…' : `Sending… ${Math.round(state.uploadProgress * 100)}%`}
+                Reading your recording…
               </span>
             </div>
           ) : (
             <div className="qd__take">
-              <MiniPlay blob={state.original} label="Play your take" />
+              <MiniPlay blob={take!.blob} label="Play your take" />
               <span className="qd__takeinfo">
-                <span className="qd__takename">{state.upload!.name.startsWith('mic-take') ? 'Your recording' : state.upload!.name}</span>
-                <span className="qd__muted">{formatTime(state.upload!.durationSec)}</span>
+                <span className="qd__takename">{take!.name}</span>
+                <span className="qd__muted">{formatTime(take!.durationSec)}</span>
               </span>
-              <button type="button" className="btn btn--ghost" onClick={startOver} disabled={working}>
+              <button type="button" className="btn btn--ghost" onClick={dub.clear} disabled={working}>
                 Re-record
               </button>
             </div>
@@ -123,11 +90,6 @@ export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsE
               {state.error}
             </p>
           )}
-          {state.upload?.warnings.map((w) => (
-            <p key={w} className="notice notice--warn">
-              {w}
-            </p>
-          ))}
         </div>
       )}
 
@@ -138,23 +100,28 @@ export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsE
             <span className="qd__n">2</span> Pick an accent
           </p>
           <div className="qd__accents" role="radiogroup" aria-label="Accent">
-            {(caps?.accents ?? []).map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                role="radio"
-                aria-checked={accent === a.id}
-                className="qd__accent"
-                disabled={working}
-                onClick={() => setAccent(a.id)}
-              >
+            {ENGINE_ACCENTS.map((a) => (
+              <button key={a.id} type="button" role="radio" aria-checked={accent === a.id} className="qd__accent" disabled={working} onClick={() => setAccent(a.id)}>
                 <span className="qd__code" aria-hidden="true">
-                  {a.stampCode}
+                  {a.code}
                 </span>
                 {a.label}
               </button>
             ))}
-            {!caps && <span className="qd__muted">Loading accents…</span>}
+          </div>
+          <div className="qd__voice" role="radiogroup" aria-label="Voice">
+            <span className="qd__muted">Voice</span>
+            {(
+              [
+                ['auto', 'Match my pitch'],
+                ['male', 'Lower'],
+                ['female', 'Higher'],
+              ] as const
+            ).map(([id, label]) => (
+              <button key={id} type="button" role="radio" aria-checked={voice === id} className="qd__vopt" disabled={working} onClick={() => setVoice(id)}>
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -163,12 +130,12 @@ export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsE
       {state.phase !== 'done' && (
         <div className="qd__section qd__go">
           {state.phase === 'dubbing' ? (
-            <Progress job={state.job} onCancel={() => void dub.cancelDub()} label={accentOpt?.label} />
+            <Progress state={state} label={accentOpt.label} onCancel={dub.cancel} />
           ) : state.phase === 'failed' ? (
             <div className="notice notice--error" role="alert">
               <p>{state.error ?? 'That didn’t work.'}</p>
               <div className="row">
-                <button type="button" className="btn btn--ink" onClick={() => void dub.retryDub()}>
+                <button type="button" className="btn btn--ink" onClick={go}>
                   Try again
                 </button>
                 <button type="button" className="btn btn--ghost" onClick={dub.another}>
@@ -182,54 +149,93 @@ export function QuickDub({ caps, capsError }: { caps: Capabilities | null; capsE
                 <input id={consentId} type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
                 <span>This is my voice, or I have permission to use it.</span>
               </label>
-              <button
-                type="button"
-                className="btn btn--accent btn--big qd__cta"
-                disabled={!canDub}
-                onClick={() => accent && void dub.startDub(accent, consent)}
-              >
-                {accentOpt ? `Dub it ${accentOpt.label}` : 'Dub it'}
+              <button type="button" className="btn btn--accent btn--big qd__cta" disabled={!canDub} onClick={go}>
+                {`Dub it ${accentOpt.label}`}
               </button>
-              {state.phase === 'cancelled' && <p className="qd__muted">Cancelled.</p>}
+              <p className="qd__muted qd__fine">
+                Runs on your device — your recording is never uploaded. The first dub downloads the open-source voice models once (about {MODEL_MB} MB).
+              </p>
             </>
           )}
         </div>
       )}
 
       {/* Result */}
-      {state.phase === 'done' && state.job && (
+      {state.phase === 'done' && state.result && take && (
         <div className="qd__result">
-          <p className="qd__title">Your {accentOpt?.label ?? ''} version is ready.</p>
-          <Compare original={state.original} dub={state.dub} dubLabel={accentOpt?.label ?? 'Dub'} />
+          <p className="qd__title">Your {accentOpt.label} version is ready.</p>
+          <Compare original={take.blob} dub={state.result.wav} dubLabel={accentOpt.label} />
+          <p className="qd__heard">
+            <span className="qd__muted">Heard:</span> “{state.result.text}”
+          </p>
           <div className="qd__actions">
-            <button type="button" className="btn btn--accent btn--big" onClick={() => void doDownload()} disabled={downloading}>
+            <button type="button" className="btn btn--accent btn--big" onClick={doDownload}>
               <svg className="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 4v12m0 0-4-4m4 4 4-4M5 20h14" />
               </svg>
-              {downloading ? 'Preparing…' : 'Download MP3'}
+              Download WAV
             </button>
             <button type="button" className="btn btn--big" onClick={dub.another}>
               Try another accent
             </button>
-            <button type="button" className="btn btn--ghost" onClick={startOver}>
+            <button type="button" className="btn btn--ghost" onClick={dub.clear}>
               Record a new take
             </button>
           </div>
-          {dlError && (
-            <p className="notice notice--error" role="alert">
-              {dlError}
-            </p>
-          )}
-          {caps && <p className="qd__muted">Your recordings are deleted automatically after {caps.limits.retentionMinutes} minutes.</p>}
+          <p className="qd__muted qd__fine">
+            Your words and timing, re-spoken by “{state.result.voice}”, an open-source {accentOpt.label} voice — not a clone of yours. Made on your device; nothing was
+            uploaded.
+          </p>
         </div>
       )}
     </div>
   );
 }
 
+function Progress({ state, label, onCancel }: { state: ReturnType<typeof useLocalDub>['state']; label: string; onCancel: () => void }) {
+  const dl = state.download;
+  const mb = (n: number) => Math.round(n / 1e6);
+  let text: string;
+  let frac: number | null = null;
+  if (state.stage === 'loading') {
+    if (dl && !dl.done && dl.total > 0) {
+      text = `Downloading the voice models — ${mb(dl.loaded)} of ${mb(dl.total)} MB. First time only.`;
+      frac = dl.loaded / dl.total;
+    } else text = 'Warming up the engine…';
+  } else if (state.stage === 'listening') text = 'Listening to your take…';
+  else if (state.stage === 'speaking') {
+    const sp = state.speaking;
+    text = `Re-speaking it in ${label}${sp && sp.count > 1 ? ` — phrase ${Math.min(sp.done + 1, sp.count)} of ${sp.count}` : ''}…`;
+    if (sp && sp.count > 1) frac = sp.done / sp.count;
+  } else text = 'Putting it together…';
+  return (
+    <div className="qd__progress" aria-busy="true">
+      <div className="qd__progtop">
+        <span className="qd__spinner" aria-hidden="true" />
+        <p role="status" aria-live="polite">
+          {text}
+        </p>
+        <button type="button" className="btn btn--ghost" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
+      {frac !== null && (
+        <div className="meter" aria-hidden="true">
+          <span style={{ width: `${Math.max(4, Math.round(frac * 100))}%` }} />
+        </div>
+      )}
+      {state.heard && (
+        <p className="qd__heard">
+          <span className="qd__muted">Heard:</span> “{state.heard}”
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ─── Recorder: one big button ─── */
-function Recorder({ onDone, disabled }: { onDone: (b: Blob, name: string) => void; disabled?: boolean }) {
-  const MAX = 60;
+function Recorder({ onDone, onStart, disabled }: { onDone: (b: Blob) => void; onStart?: () => void; disabled?: boolean }) {
+  const MAX = LIMITS.maxSec;
   const [live, setLive] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [level, setLevel] = useState(0);
@@ -262,6 +268,7 @@ function Recorder({ onDone, disabled }: { onDone: (b: Blob, name: string) => voi
 
   const start = async () => {
     setErr(null);
+    onStart?.();
     if (typeof MediaRecorder === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
       setErr('This browser can’t record audio. Try Chrome or Safari, or upload a file.');
       return;
@@ -277,7 +284,7 @@ function Recorder({ onDone, disabled }: { onDone: (b: Blob, name: string) => voi
         const mime = r.mimeType || type || 'audio/webm';
         const blob = new Blob(chunks.current, { type: mime });
         cleanup();
-        if (blob.size > 0) onDone(blob, `mic-take.${mime.includes('mp4') ? 'm4a' : 'webm'}`);
+        if (blob.size > 0) onDone(blob);
       };
       mr.current = r;
       r.start(250);
@@ -451,35 +458,3 @@ function Compare({ original, dub, dubLabel }: { original: Blob | null; dub: Blob
   );
 }
 
-function Progress({ job, onCancel, label }: { job: ReturnType<typeof useDub>['state']['job']; onCancel: () => void; label?: string }) {
-  const seg = job?.segments;
-  const stage = job?.state === 'queued' ? 'waiting' : job?.stage;
-  const text =
-    stage === 'waiting'
-      ? 'In the queue…'
-      : stage === 'preparing'
-        ? 'Getting your recording ready…'
-        : stage === 'converting'
-          ? `Re-speaking it ${label ? `in ${label}` : ''}${seg && seg.total > 1 ? ` — part ${Math.min(seg.done + 1, seg.total)} of ${seg.total}` : ''}…`
-          : 'Finishing up…';
-  // Real progress only: the bar appears when the server reports parts done, never on a timer.
-  const frac = stage === 'converting' && seg && seg.total > 1 ? seg.done / seg.total : null;
-  return (
-    <div className="qd__progress" aria-busy="true">
-      <div className="qd__progtop">
-        <span className="qd__spinner" aria-hidden="true" />
-        <p role="status" aria-live="polite">
-          {text}
-        </p>
-        <button type="button" className="btn btn--ghost" onClick={onCancel}>
-          Cancel
-        </button>
-      </div>
-      {frac !== null && (
-        <div className="meter" aria-hidden="true">
-          <span style={{ width: `${Math.max(4, Math.round(frac * 100))}%` }} />
-        </div>
-      )}
-    </div>
-  );
-}

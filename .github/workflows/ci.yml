@@ -1,8 +1,11 @@
 name: CI
 on:
   push:
-    branches: [main]
+    branches: [main, 'engine-*']
   pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   check:
@@ -12,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install ffmpeg + espeak-ng (test speech)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng
       - run: npm install
       - name: Typecheck (server, shared, tests)
         run: npm run typecheck
@@ -25,9 +28,18 @@ jobs:
         run: npm test
       - name: Build web app
         run: npm run build
-      - name: Browser end-to-end
+      - name: Browser end-to-end (real models, in Chromium)
+        timeout-minutes: 40
         run: |
           npx playwright install --with-deps chromium
           DATA_DIR=$RUNNER_TEMP/dubclub-data npm start &
           for i in $(seq 1 30); do curl -sf http://localhost:8787/api/health && break; sleep 1; done
-          npm run e2e
+          mkdir -p $RUNNER_TEMP/e2e-out
+          OUT=$RUNNER_TEMP/e2e-out npm run e2e 2>&1 | tee $RUNNER_TEMP/e2e-out/log.txt; exit ${PIPESTATUS[0]}
+      - name: Publish e2e results to the ci-results branch
+        if: always() && github.event_name == 'push'
+        run: |
+          cd $RUNNER_TEMP/e2e-out 2>/dev/null || exit 0
+          rm -f notes.txt
+          git init -q -b r && git add -A && git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "e2e results for ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:ci-results

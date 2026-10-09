@@ -570,3 +570,50 @@
   font-size: 1.0625rem;
   margin: 8px 0 24px;
 }
+
+/* voice choice + fine print + transcript */
+.qd__voice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.qd__voice > .qd__muted {
+  margin-right: 4px;
+  font-size: 0.8125rem;
+}
+.qd__vopt {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-line);
+  background: transparent;
+  color: var(--chalk);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.qd__vopt:hover:not(:disabled) {
+  background: var(--glass-hover);
+}
+.qd__vopt:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.qd__vopt[aria-checked='true'] {
+  border-color: var(--accent);
+  background: rgb(53 99 255 / 0.14);
+}
+.qd__fine {
+  margin-top: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.qd__heard {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--chalk);
+}

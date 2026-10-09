@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { Capabilities } from '../../shared/types.ts';
 import { BRAND } from '../brand/config.ts';
 import { Echo, Ticker, Wordmark } from '../brand/Echo.tsx';
 import { QuickDub } from '../components/QuickDub.tsx';
@@ -8,34 +7,19 @@ import { StampPicker } from '../components/Stamps.tsx';
 import { FeedCard, type FeedItem } from '../components/Thumbs.tsx';
 import { Sampler } from '../components/Sampler.tsx';
 import { PHOTOS } from '../lib/photos.ts';
-import { useCapabilities } from '../lib/hooks.ts';
 import { Link, href } from '../router.tsx';
 
 export function Landing() {
-  const { caps, error } = useCapabilities();
-
   useEffect(() => {
     document.title = `${BRAND.name} — ${BRAND.tagline}`;
   }, []);
-
-  const dev = caps?.engine.kind === 'dev-passthrough';
-  const places = caps?.accents.map((a) => a.place.split(',')[0]) ?? [];
 
   return (
     <>
       <SiteNav />
       <main id="main">
-        <Hero caps={caps} error={error} />
-        <Ticker
-          items={
-            dev
-              ? ['Test mode', 'Accent engine not connected yet', 'Everything else is live', 'Test mode', 'Accent engine not connected yet', 'Everything else is live']
-              : places.length
-                ? [...places.map((p) => `${p} cut`), 'No re-records', 'No voice actors', ...places.map((p) => `${p} cut`), 'No booth']
-                : ['No re-records', 'No voice actors', 'No booth', 'No re-records', 'No voice actors', 'No booth']
-          }
-          tone={dev ? 'pop' : 'accent'}
-        />
+        <Hero />
+        <Ticker items={['London cut', 'Ohio cut', 'No re-records', 'Nothing uploaded', 'London cut', 'Ohio cut', 'Free + open source', 'No booth']} tone="accent" />
         <section className="sect sect--court hear" aria-labelledby="hear-h">
           <div className="wrap sect__head hear__inner">
             <div>
@@ -44,19 +28,19 @@ export function Landing() {
               </h2>
               <p className="lede">Not sure which one fits? Play the same line in each before you dub.</p>
             </div>
-            <Sampler caps={caps} />
+            <Sampler />
           </div>
         </section>
         <HowItWorks />
         <UseCases />
-        <StatSheet caps={caps} />
-        <HouseRules caps={caps} />
+        <StatSheet />
+        <HouseRules />
         <section id="faq" className="sect sect--chalk" aria-labelledby="faq-h">
           <div className="wrap wrap--split">
             <h2 id="faq-h" className="h2">
               Questions, answered.
             </h2>
-            <Faq items={faqItems(caps)} />
+            <Faq items={FAQ} />
           </div>
         </section>
         <FinalCta />
@@ -104,8 +88,7 @@ export function SiteNav() {
   );
 }
 
-function Hero({ caps, error }: { caps: Capabilities | null; error: string | null; onPick?: (id: string) => void }) {
-  const dev = caps?.engine.kind === 'dev-passthrough';
+function Hero() {
   return (
     <section className="hero" aria-labelledby="hero-h">
       <div className="hero__court" aria-hidden="true">
@@ -118,11 +101,11 @@ function Hero({ caps, error }: { caps: Capabilities | null; error: string | null
               <span className="chip__dot" /> Record. Pick an accent. Download.
             </span>
             <h1 id="hero-h" className="hero__h">
-              <span className="hero__l1 tt">Same voice.</span>
+              <span className="hero__l1 tt">Your words.</span>
               <span className="hero__l2 tt tt--accent">New accent.</span>
             </h1>
             <p className="hero__lede">
-              Record a sentence, pick an accent, and hear yourself from somewhere else. Same words, same timing, no re-record. Download it when you like what you hear.
+              Record a sentence, pick British or American, and hear it come back in that accent — your words, your timing, no re-record. Download it when you like what you hear.
             </p>
             <div className="hero__ctas hero__mobilecta">
               <a href="#try" className="btn btn--accent btn--big">
@@ -131,7 +114,7 @@ function Hero({ caps, error }: { caps: Capabilities | null; error: string | null
             </div>
           </div>
           <div className="hero__media" id="try">
-            <QuickDub caps={caps} capsError={error} />
+            <QuickDub />
           </div>
         </div>
       </div>
@@ -140,11 +123,11 @@ function Hero({ caps, error }: { caps: Capabilities | null; error: string | null
 }
 
 const STEPS = [
-  { t: 'Drop your take', d: 'Upload the video or audio you already made, or record straight from your mic.', v: 'drop' },
-  { t: 'Pick your cut', d: 'Choose an accent. You only see accents the engine can genuinely do.', v: 'jersey' },
-  { t: 'Dub it', d: 'We split your take at the pauses, convert each part and stitch it back in time.', v: 'run' },
+  { t: 'Record a take', d: 'Hit record and say a line or two, or drop in an audio or video file you already have.', v: 'drop' },
+  { t: 'Pick your cut', d: 'British or American, with a lower or higher voice. Those are the accents the engine does well today.', v: 'jersey' },
+  { t: 'Dub it', d: 'Your browser writes down each word with its timing, then re-speaks every phrase in the new accent, in the same slot.', v: 'run' },
   { t: 'Check it', d: 'Flip between the original and the new cut at the exact same moment.', v: 'ab' },
-  { t: 'Post it', d: 'Download the video with the new audio dropped in, or WAV / MP3 / M4A for your editor.', v: 'out' },
+  { t: 'Download', d: 'Save the dub as a WAV, ready for your editor.', v: 'out' },
 ] as const;
 
 function HowItWorks() {
@@ -187,7 +170,7 @@ function PlayVisual({ kind }: { kind: string }) {
     case 'jersey':
       return (
         <>
-          <span className="pv-jersey">AU</span>
+          <span className="pv-jersey">US</span>
           <span className="pv-jersey pv-jersey--on">GB</span>
         </>
       );
@@ -209,7 +192,7 @@ function PlayVisual({ kind }: { kind: string }) {
         </>
       );
     default:
-      return <span className="pv-chip">TAKE_03 (en-GB).MP4</span>;
+      return <span className="pv-chip">TAKE_03 (British).WAV</span>;
   }
 }
 
@@ -223,24 +206,24 @@ const USES: FeedItem[] = [
     label: 'UK cut',
     title: 'Give that take another take',
     who: 'YouTube creators',
-    body: 'Re-recording a twelve-minute video for a different audience eats a weekend. Dub the take you already have, check it against the original, and export the video with the new track in place.',
+    body: 'Re-recording a line for a different audience eats an afternoon. Dub the take you already have, check it against the original, and drop the new track into your edit.',
   },
   {
     photo: PHOTOS.editor,
     say: 'Three things nobody tells you about saving money.',
-    lang: 'en-AU',
+    lang: 'en-US',
     gender: 'male',
-    hook: ['No face.', 'Same voice.'],
+    hook: ['No face.', 'One voice.'],
     label: 'Every upload',
     title: 'One voice. No camera. Every upload.',
     who: 'faceless channels',
-    body: 'Settle on one delivery for the channel and apply it to every upload, so episodes recorded months apart still sound like the same show.',
-    caveat: 'Pinned: an accent change is not anonymity. Your vocal character, phrasing and what you say can still identify you.',
+    body: 'Settle on one narrator voice for the channel and run every script through it, so episodes recorded months apart still sound like the same show.',
+    caveat: 'Pinned: the dub is re-spoken by an open-source voice, but what you say and how you phrase it can still identify you.',
   },
   {
     photo: PHOTOS.excited,
     say: 'Okay, wait for it… that was way too much fun.',
-    lang: 'en-AU',
+    lang: 'en-US',
     gender: 'female',
     hook: ['Wait for', 'the accent…'],
     label: 'Short',
@@ -251,9 +234,9 @@ const USES: FeedItem[] = [
   {
     photo: PHOTOS.podcaster,
     say: 'Welcome to the show. I’m your host, and today we’re talking travel.',
-    lang: 'en-AU',
+    lang: 'en-US',
     gender: 'female',
-    hook: ['Pod, but', 'make it Aussie'],
+    hook: ['Pod, but', 'make it British'],
     label: 'Podcast clip',
     title: 'Audition the accent before you book the booth',
     who: 'podcast clips and voiceover',
@@ -277,7 +260,7 @@ const USES: FeedItem[] = [
     gender: 'female',
     hook: ['Wait…', 'is that me?'],
     label: 'Just for fun',
-    title: 'Hear yourself from somewhere else',
+    title: 'Hear your words from somewhere else',
     who: 'anyone curious',
     body: 'No project required. Record a sentence, send it on tour, flip between A and B, and laugh at the bits that almost work.',
   },
@@ -301,28 +284,19 @@ function UseCases() {
   );
 }
 
-function StatSheet({ caps }: { caps: Capabilities | null }) {
-  const e = caps?.engine;
-  const accentState: [string, string] = !e
-    ? ['Checking', 'Asking the studio which engine it’s running…']
-    : e.kind === 'accent-conversion'
-      ? [e.ready ? 'Live' : 'Offline', `${e.name}: converts accent and aims to keep the speaker. ${caps!.accents.length} accent${caps!.accents.length === 1 ? '' : 's'} available.`]
-      : e.kind === 'voice-swap'
-        ? ['Voice swap', 'Accent comes from a different target voice, so you won’t sound like you.']
-        : ['Not yet', 'This build runs the development engine. Every step is real except the accent change itself.'];
+function StatSheet() {
   const rows: Array<[string, string, string]> = [
-    ['Live', 'Audio upload', 'MP3, WAV, M4A, AAC, OGG, Opus, FLAC and WebM.'],
-    ['Live', 'Video upload', 'MP4, MOV, M4V and WebM. We pull the audio out and leave the picture alone.'],
     ['Live', 'Record in the browser', 'Up to a minute from your mic, with a live level meter.'],
+    ['Live', 'Upload a file', 'Any audio or video your browser can play: MP3, WAV, M4A, WebM, MP4, MOV and more.'],
+    ['Live', 'British + American', 'Each phrase re-spoken by an open-source voice in that accent, placed where you said it.'],
+    ['Live', 'Voice choice', 'Matched to your pitch automatically, or pick lower or higher.'],
     ['Live', 'A/B check', 'Flip between versions mid-sentence without losing your place.'],
-    ['Live', 'Real progress', 'Real stages and a part-by-part count. Cancel or retry any time.'],
-    ['Live', 'Audio export', 'WAV, MP3 or M4A, level-matched to your original.'],
-    ['Live', 'Video export', 'Your original picture with the dubbed audio swapped in.'],
-    ['Live', 'Delete for real', 'Removes the files from the server, not just from the screen.'],
-    [accentState[0], 'Accent change', accentState[1]],
-    [e?.supportsStrength ? 'Live' : 'Depends', 'Accent strength', e?.supportsStrength ? 'Dial how far the accent travels.' : 'Shown only when the engine supports it.'],
-    ['Not yet', 'Accounts + saved projects', 'Sessions are anonymous and short-lived for now.'],
-    ['Not yet', 'Live calls', 'Dub Club works on recordings, not live audio.'],
+    ['Live', 'Real progress', 'Model download in MB, then phrase by phrase. Cancel any time.'],
+    ['Live', 'WAV download', 'Level-matched to your original.'],
+    ['Live', 'Private by design', 'Runs on your device. Your recording is never uploaded.'],
+    ['Not yet', 'Your own voice', 'The dub uses an open-source voice, not a clone of yours. Keeping your timbre is the next big step.'],
+    ['Not yet', 'More accents', 'Australian, Irish, Scottish and more need open models that don’t exist yet at this quality.'],
+    ['Not yet', 'Video export', 'Download the audio and drop it into your editor for now.'],
   ];
   return (
     <section id="stats" className="sect sect--court stats" aria-labelledby="stats-h">
@@ -331,15 +305,10 @@ function StatSheet({ caps }: { caps: Capabilities | null }) {
           <h2 id="stats-h" className="h2">
             What’s in the studio.
           </h2>
-          <p className="lede">
-            Everything marked live is built and tested end to end. The accent itself comes from whichever engine the studio is
-            plugged into — and we always tell you which one.
+          <p className="lede">Everything marked live works today, in your browser, for free. What isn’t ready yet says so.</p>
+          <p className="engine-pill" data-kind="accent-conversion">
+            Engine: <strong>Whisper + Kokoro, on your device</strong>
           </p>
-          {e && (
-            <p className="engine-pill" data-kind={e.kind}>
-              Engine: <strong>{e.name}</strong>
-            </p>
-          )}
         </div>
         <ul className="sheet">
           {rows.map(([state, name, note]) => (
@@ -355,31 +324,16 @@ function StatSheet({ caps }: { caps: Capabilities | null }) {
   );
 }
 
-function HouseRules({ caps }: { caps: Capabilities | null }) {
-  const e = caps?.engine;
-  const mins = caps?.limits.retentionMinutes ?? 60;
+function HouseRules() {
   const items: Array<[string, React.ReactNode]> = [
-    ['Where is my recording processed?', <>On the server running this studio. {e ? e.providerNote : ''}</>],
-    [
-      'Is it sent to anyone else?',
-      e?.external ? (
-        <>Yes. The current engine uses an outside provider, which handles your audio under its own terms and retention policy.</>
-      ) : (
-        <>Not with the engine this studio is running now. If that changes, this answer changes with it.</>
-      ),
-    ],
-    [
-      'How long is it kept?',
-      <>
-        Your original and your dubs sit in private storage tied to this browser tab. They’re deleted automatically after {mins}{' '}
-        minutes without activity, or straight away when you delete them.
-      </>,
-    ],
-    ['Can I delete it?', <>Yes. Recording a new take deletes the old one and its dubs straight away, and everything is deleted automatically after {mins} minutes.</>],
-    ['Do you make transcripts?', <>No. Dub Club doesn’t create or store transcripts.</>],
-    ['Do you train on my voice?', <>No. Your recordings aren’t used to train anything.</>],
-    ['Does a new accent make me anonymous?', <>No. It changes how you pronounce things, not who you are. People who know your voice may still recognise it.</>],
-    ['What can I upload?', <>Your own voice, or recordings you have permission to transform. You confirm that before every dub. No impersonation.</>],
+    ['Where is my recording processed?', <>In your browser, on your device. Dub Club has no server that receives your audio.</>],
+    ['Is it sent to anyone?', <>No. The only thing downloaded is the open-source voice models, fetched once from Hugging Face and cached by your browser. Your audio never goes the other way.</>],
+    ['How long is it kept?', <>Only while this tab is open. Close it, or record a new take, and it’s gone. Nothing is stored anywhere else.</>],
+    ['Do you make transcripts?', <>Your browser writes one down so it knows what to re-speak, and shows it to you. It stays on your device and disappears with the tab.</>],
+    ['Do you train on my voice?', <>No. We never receive it, so we couldn’t.</>],
+    ['Is it my voice in the dub?', <>No. Your words and timing are re-spoken by an open-source voice in the accent you pick. We say that plainly on every result.</>],
+    ['Does it make me anonymous?', <>Don’t rely on it. What you say and how you phrase it can still identify you.</>],
+    ['What can I use?', <>Your own voice, or recordings you have permission to use. You confirm that before every dub. No impersonation.</>],
   ];
   return (
     <section id="privacy" className="sect sect--chalk rules" aria-labelledby="privacy-h">
@@ -387,7 +341,7 @@ function HouseRules({ caps }: { caps: Capabilities | null }) {
         <h2 id="privacy-h" className="h2">
           Your voice. Your rules.
         </h2>
-        <p className="lede">Your voice is personal. Here’s exactly how this studio handles it. No fine print anywhere else.</p>
+        <p className="lede">Your voice is personal, so it never leaves your device. Here’s exactly how that works.</p>
         <dl className="rules__list">
           {items.map(([q, a], i) => (
             <div key={q} className="rules__item">
@@ -401,43 +355,27 @@ function HouseRules({ caps }: { caps: Capabilities | null }) {
             </div>
           ))}
         </dl>
-        <p className="rules__small">Server logs record ids, timings and error codes. Never file names, audio or what you said.</p>
+        <p className="rules__small">
+          Built on open-source models: Whisper (MIT) for listening and Kokoro (Apache-2.0) for speaking, run with Transformers.js and ONNX Runtime.
+        </p>
       </div>
     </section>
   );
 }
 
-function faqItems(caps: Capabilities | null): QA[] {
-  const e = caps?.engine;
-  const accentList = caps?.accents.map((a) => a.label).join(', ');
-  const dev = e?.kind === 'dev-passthrough';
-  return [
-    { q: 'What does Dub Club do?', a: 'It takes a recording of someone speaking and re-speaks it in a different accent, aiming to keep the same voice, words and timing. Then you compare the two and export the one you want.' },
-    { q: 'How is that different from a voice changer?', a: 'A voice changer swaps who you sound like — robot, monster, someone else. Accent conversion tries to keep who you are and change where you sound from.' },
-    {
-      q: 'Will I still sound like myself?',
-      a: e?.kind === 'voice-swap' ? 'Not with the engine running now. It’s a voice swap: your delivery is kept, but the voice belongs to someone else.' : 'That’s the aim, and how close it gets depends on the accent engine. Use the A/B check to judge for yourself before you publish anything.',
-    },
-    { q: 'Will the words I say change?', a: 'No. Dub Club converts your speech directly. It doesn’t transcribe and rewrite it, so the words should stay yours.' },
-    {
-      q: 'Which accents are supported?',
-      a: dev
-        ? `This build runs in test mode, so none are actually converted yet. The studio shows ${accentList} so you can try the full flow.`
-        : accentList
-          ? `Right now: ${accentList}. We only list accents the engine can actually produce.`
-          : 'It depends on the engine connected to the studio. The studio only lists what that engine can do.',
-    },
-    { q: 'Can I upload video?', a: 'Yes — MP4, MOV, M4V and WebM. We take the audio out to dub it and keep your picture untouched.' },
-    { q: 'Can I export the transformed video?', a: 'Yes. You get your original video with the dubbed audio in place. If the picture can’t be rebuilt, the dubbed audio is still there to download.' },
-    { q: 'What file formats work?', a: `Audio: MP3, WAV, M4A, AAC, OGG, Opus, FLAC, WebM. Video: MP4, MOV, M4V, WebM. Up to ${caps ? Math.round(caps.limits.maxDurationSec / 60) : 10} minutes and ${caps?.limits.maxUploadMb ?? 200} MB.` },
-    { q: 'How long does processing take?', a: 'It depends on the length of your take and the engine. You’ll see which stage it’s at and how many parts are done — no made-up countdowns.' },
-    { q: 'What if it sounds off?', a: 'Pick another accent, adjust the strength if the engine offers it, or run it again. Clear, close-mic recordings with one speaker give the best results.' },
-    { q: 'How are recordings handled?', a: <>Privately, briefly and deletably. <a href="#privacy">Here’s exactly how.</a></> },
-    { q: 'Does changing my accent make me anonymous?', a: 'No. Your vocal character and what you say can still identify you. Don’t rely on Dub Club for anonymity.' },
-    { q: 'Can I use the output commercially?', a: 'Your recording is yours. Whether a dub can be used commercially depends on the licence of the accent engine running the studio, so check that before you publish.' },
-    { q: 'Is there a free option?', a: 'There’s no pricing yet. Dub Club is in early testing.' },
-  ];
-}
+const FAQ: QA[] = [
+  { q: 'What does Dub Club do?', a: 'You record a line, pick British or American, and it comes back re-spoken in that accent with the same words and timing. Compare the two, then download the one you want.' },
+  { q: 'Will it sound like me?', a: 'Not yet. The new version is spoken by an open-source voice in that accent, matched to your pitch range. Your words and timing are kept; your voice isn’t. We’re working on keeping your timbre.' },
+  { q: 'Will the words change?', a: 'They shouldn’t. Your browser writes down what you said and shows it to you, and the new voice says exactly that. Mumbled or noisy takes can be misheard, so check the “Heard” line.' },
+  { q: 'Which accents are supported?', a: 'British and American English. We only list accents the engine does well.' },
+  { q: 'Is it really free?', a: 'Yes. Everything runs on your own device with open-source models, so there’s no server bill to pass on.' },
+  { q: 'Why does the first dub take longer?', a: 'Your browser downloads the voice models once (about 170 MB), then keeps them. After that, dubs start straight away, even with a slow connection.' },
+  { q: 'How long does a dub take?', a: 'Usually somewhere between a few seconds and a minute, depending on your device and how long the take is. You’ll see the real stage and a phrase-by-phrase count.' },
+  { q: 'What can I upload?', a: 'Any audio or video your browser can play — MP3, WAV, M4A, WebM, MP4, MOV and more — up to a minute long.' },
+  { q: 'What do I get?', a: 'A WAV file of the dub, level-matched to your original, ready to drop into your editor.' },
+  { q: 'Is my recording uploaded?', a: <>No. It never leaves your device. <a href="#privacy">Here’s exactly how.</a></> },
+  { q: 'Can I use the output commercially?', a: 'Kokoro’s voices are released under Apache-2.0, which allows commercial use. Your words are yours. Only dub voices you have the right to use.' },
+];
 
 function FinalCta() {
   return (
@@ -446,7 +384,7 @@ function FinalCta() {
         <Echo as="h2" id="final-h" className="final__h">
           Give that take another take.
         </Echo>
-        <p className="final__sub">No re-records. No voice actors. Just another version of you.</p>
+        <p className="final__sub">No re-records. No booth. Nothing uploaded.</p>
         <Link to={BRAND.studioPath} className="btn btn--ink btn--big">
           <span>Start dubbing</span>
         </Link>

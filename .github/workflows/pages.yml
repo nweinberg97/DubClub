@@ -1,6 +1,5 @@
-# Publishes the web app to GitHub Pages. The studio talks to the Dub Club service on Render.
-# Settings → Pages → Source: "GitHub Actions".
-# Settings → Secrets and variables → Actions → Variables: API_ORIGIN = your Render URL (if not the default below).
+# Publishes the web app to GitHub Pages. The dubbing engine runs in the visitor's browser,
+# so no server is needed. Settings → Pages → Source: "GitHub Actions".
 name: Pages
 on:
   push:
@@ -28,10 +27,11 @@ jobs:
         with:
           node-version: 22
       - run: npm install
+      - name: Engine packages present
+        run: test -f node_modules/kokoro-js/package.json && test -f node_modules/@huggingface/transformers/package.json
       - name: Build for Pages
         env:
           BASE_PATH: /${{ github.event.repository.name }}
-          API_ORIGIN: ${{ vars.API_ORIGIN || 'https://dubclub.onrender.com' }}
           STATIC_HOST: '1'
         run: npm run build
       - uses: actions/configure-pages@v5

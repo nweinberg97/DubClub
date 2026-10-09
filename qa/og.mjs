@@ -5,7 +5,7 @@ const p = await b.newPage({ viewport: { width: 1200, height: 630 } });
 await p.goto('http://localhost:8787/');
 await p.locator('h1').waitFor();
 await p.evaluate(() => {
-  const line = '<span class="hero__l1">Same voice.</span><span class="hero__l2">New accent.</span>';
+  const line = '<span class="hero__l1">Your words.</span><span class="hero__l2">New accent.</span>';
   document.body.innerHTML = `<div style="width:1200px;height:630px;background:var(--black);padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;position:relative;overflow:hidden">
     <span style="position:absolute;right:-180px;top:-200px;width:640px;height:640px;border:3px solid var(--line);border-radius:50%"></span>
     <span class="wordmark" style="font-size:44px">${'<span class="wordmark__a">DUB</span><span class="wordmark__b">CLUB</span>'}</span>
