@@ -8,6 +8,7 @@ import './styles/base.css';
 import './styles/components.css';
 import './styles/landing.css';
 import './styles/studio.css';
+import './styles/social.css';
 
 function NotFound() {
   return (

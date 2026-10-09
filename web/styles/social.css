@@ -1,0 +1,662 @@
+/* ─── Social / thumbnail layer ─────────────────────────────────────────
+   Thumbnail text, chips, video thumbnails, a vertical short, feed cards, chapters, the ready toast.
+   Same palette and type as the rest of the system — just dressed for the feed. */
+
+/* Thumbnail text: heavy italic caps, black outline, hard offset shadow */
+.tt {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--chalk);
+  -webkit-text-stroke: 0.07em var(--black);
+  paint-order: stroke fill;
+  text-shadow: 0.045em 0.055em 0 var(--red);
+}
+.tt--gold {
+  color: var(--gold);
+}
+.hthumb .tt,
+.vthumb .tt,
+.short .tt {
+  text-shadow: 0.05em 0.06em 0 var(--black);
+}
+/* Section headings pick up the thumbnail shadow */
+.h2,
+.studio__h {
+  text-shadow: 0.045em 0.05em 0 var(--red);
+}
+
+/* Chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.32em 0.7em;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1;
+  text-transform: uppercase;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.chip--chalk {
+  background: var(--chalk);
+  color: var(--black);
+}
+.chip--black {
+  background: var(--black);
+  color: var(--chalk);
+}
+.chip--red {
+  background: var(--red);
+  color: var(--black);
+}
+.chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: blink 1.2s steps(2) infinite;
+}
+
+/* Waveform bars used inside thumbnails */
+.bars {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 16%;
+  height: 34%;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  opacity: 0.85;
+}
+.bars span {
+  flex: 1;
+  height: calc(var(--h) * 100%);
+  background: currentColor;
+  border-radius: 2px;
+}
+
+/* ─── Hero ─────────────────────────────────────────── */
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: var(--s7);
+  align-items: center;
+}
+.hero__live {
+  margin-bottom: var(--s5);
+}
+.hero__h {
+  font-size: clamp(3.4rem, 8.4vw, 8.25rem);
+  line-height: 0.86;
+  padding: 0;
+}
+.hero__h .tt {
+  white-space: normal;
+}
+.hero__l2 {
+  padding-left: 0;
+  color: var(--gold);
+}
+.hero__lede {
+  margin-top: var(--s5);
+}
+.hero__copy .hero__ctas {
+  margin-top: var(--s6);
+}
+.hero__media {
+  position: relative;
+  padding: 0 7% 18% 0;
+}
+.hero__media .hero__sticker {
+  position: absolute;
+  top: -42px;
+  left: -36px;
+  right: auto;
+  bottom: auto;
+  width: 124px;
+  height: 124px;
+  font-size: 1.25rem;
+  z-index: 3;
+}
+
+.hthumb {
+  margin: 0;
+  transform: rotate(-2.5deg);
+}
+.hthumb__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--chalk);
+  box-shadow:
+    0 0 0 3px var(--chalk),
+    0 30px 60px rgb(0 0 0 / 0.55);
+}
+.hthumb__half {
+  position: absolute;
+  inset: 0;
+  color: var(--black);
+}
+.hthumb__half--a {
+  background: var(--chalk);
+  clip-path: polygon(0 0, 60% 0, 47% 100%, 0 100%);
+}
+.hthumb__half--b {
+  background: var(--red);
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 47% 100%);
+}
+.hthumb__half .chip {
+  position: absolute;
+  top: 6%;
+}
+.hthumb__half--a .chip {
+  left: 4%;
+}
+.hthumb__half--b .chip {
+  right: 4%;
+}
+.hthumb__half .bars {
+  bottom: 12%;
+  height: 26%;
+  opacity: 0.25;
+}
+.hthumb__half--b .bars {
+  opacity: 0.45;
+}
+.hthumb__hook {
+  position: absolute;
+  left: 5%;
+  top: 22%;
+  margin: 0;
+  font-size: clamp(2rem, 4.6vw, 4.4rem);
+  line-height: 0.88;
+}
+.hthumb__circled {
+  position: relative;
+}
+.hthumb__circled::after {
+  content: '';
+  position: absolute;
+  inset: -0.18em -0.22em -0.12em -0.2em;
+  border: 0.07em solid var(--red);
+  border-radius: 50%;
+  transform: rotate(-4deg);
+}
+.hthumb__arrow {
+  position: absolute;
+  right: 10%;
+  bottom: 18%;
+  width: 22%;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(3px 4px 0 var(--black));
+}
+.hthumb__dur {
+  position: absolute;
+  right: 3%;
+  bottom: 7%;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.85);
+  color: var(--chalk);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.hthumb__watched,
+.vthumb__watched {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: rgb(0 0 0 / 0.35);
+}
+.hthumb__watched::after,
+.vthumb__watched::after {
+  content: '';
+  position: absolute;
+  inset: 0 38% 0 0;
+  background: var(--red);
+}
+.vmeta {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 14px;
+}
+.vmeta > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+.vmeta__title {
+  font-family: var(--text);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  text-transform: none;
+  color: var(--chalk);
+}
+.vmeta__sub {
+  font-size: 0.875rem;
+  color: var(--steel);
+}
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--black);
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+.avatar--sm {
+  width: 36px;
+  height: 36px;
+  font-size: 0.8125rem;
+}
+
+/* Vertical short */
+.short {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 34%;
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 60% at 50% 30%, #2a2a30 0%, var(--court) 70%),
+    var(--court);
+  box-shadow:
+    0 0 0 3px var(--black),
+    0 0 0 5px var(--chalk),
+    0 30px 50px rgb(0 0 0 / 0.6);
+  transform: rotate(5deg);
+  color: var(--chalk);
+  z-index: 2;
+}
+.short__top {
+  position: absolute;
+  top: 6%;
+  left: 8%;
+}
+.short .bars {
+  top: 24%;
+  bottom: auto;
+  height: 18%;
+  left: 12%;
+  right: 22%;
+  color: var(--red);
+  align-items: center;
+}
+.short__caps {
+  position: absolute;
+  left: 8%;
+  right: 20%;
+  top: 48%;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.25em;
+  font-size: clamp(1.1rem, 1.9vw, 1.75rem);
+  line-height: 1;
+}
+.short__caps span {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--chalk);
+  -webkit-text-stroke: 0.08em var(--black);
+  paint-order: stroke fill;
+  text-shadow: 0.05em 0.06em 0 var(--black);
+  animation: caption 4s infinite;
+  animation-delay: calc(var(--w) * 1s);
+}
+@keyframes caption {
+  0%,
+  22% {
+    color: var(--gold);
+    transform: scale(1.12) rotate(-2deg);
+  }
+  25%,
+  100% {
+    color: var(--chalk);
+    transform: none;
+  }
+}
+.short__rail {
+  position: absolute;
+  right: 7%;
+  bottom: 22%;
+  display: grid;
+  gap: 14px;
+}
+.short__rail svg {
+  fill: none;
+  stroke: var(--chalk);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.short__foot {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 6%;
+  display: grid;
+  gap: 2px;
+  font-size: 0.75rem;
+}
+.short__handle {
+  font-weight: 700;
+}
+.short__audio {
+  color: var(--steel);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+  .hero__media {
+    max-width: 640px;
+    margin-top: var(--s5);
+  }
+}
+@media (max-width: 600px) {
+  .hero__h {
+    font-size: 17vw;
+  }
+  .hero__media {
+    padding: 0 10% 30% 0;
+  }
+  .hero__media .hero__sticker {
+    width: 86px;
+    height: 86px;
+    font-size: 0.875rem;
+    top: -30px;
+    left: auto;
+    right: -6px;
+  }
+  .short {
+    width: 40%;
+  }
+}
+
+/* ─── Feed (use cases) ─────────────────────────────── */
+.uses__lede {
+  color: var(--steel);
+}
+.feed {
+  margin-top: var(--s7);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s7) var(--s5);
+}
+.vcard {
+  min-width: 0;
+}
+.vthumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform var(--t-med) var(--ease-snap);
+}
+.vcard:hover .vthumb {
+  transform: scale(1.025) rotate(-0.6deg);
+}
+.vthumb--red {
+  background: var(--red);
+}
+.vthumb--gold {
+  background: var(--gold);
+}
+.vthumb--chalk {
+  background: var(--chalk);
+}
+.vthumb--court {
+  background:
+    repeating-linear-gradient(-60deg, transparent 0 16px, rgb(255 255 255 / 0.035) 16px 32px),
+    var(--court-2);
+}
+.vthumb__hook {
+  position: absolute;
+  left: 7%;
+  bottom: 16%;
+  right: 30%;
+  margin: 0;
+  font-size: clamp(1.7rem, 2.7vw, 2.5rem);
+  line-height: 0.9;
+}
+.vthumb .tt--pop {
+  color: var(--gold);
+}
+.vthumb--gold .tt--pop,
+.vthumb--chalk .tt--pop {
+  color: var(--red);
+}
+.vthumb__circle {
+  position: absolute;
+  right: 9%;
+  top: 14%;
+  width: 26%;
+  aspect-ratio: 1;
+  border: 6px solid var(--red);
+  border-radius: 50%;
+  transform: rotate(-8deg) scaleX(1.15);
+}
+.vthumb--red .vthumb__circle {
+  border-color: var(--gold);
+}
+.vthumb__arrow {
+  position: absolute;
+  right: 6%;
+  top: 10%;
+  width: 28%;
+  fill: none;
+  stroke: var(--black);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.vthumb--red .vthumb__arrow {
+  stroke: var(--gold);
+  filter: drop-shadow(3px 4px 0 var(--black));
+}
+.vthumb__badge {
+  position: absolute;
+  right: 6%;
+  top: 10%;
+  padding: 0.2em 0.6em;
+  background: var(--red);
+  color: var(--chalk);
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  transform: rotate(6deg);
+  box-shadow: 4px 4px 0 var(--black);
+}
+.vthumb__split {
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  clip-path: polygon(64% 0, 100% 0, 100% 100%, 52% 100%);
+}
+.vcard__body {
+  margin-top: var(--s3);
+  padding-left: 48px;
+  font-size: 0.9375rem;
+  color: var(--steel);
+}
+.vcard__pin {
+  margin: var(--s3) 0 0 48px;
+  padding: var(--s2) var(--s3);
+  border-left: 4px solid var(--gold);
+  background: #1f1a08;
+  font-size: 0.875rem;
+}
+@media (max-width: 1000px) {
+  .feed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 620px) {
+  .feed {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Chapters bar (how it works) ──────────────────── */
+.chapters {
+  display: flex;
+  gap: 4px;
+  margin-top: var(--s6);
+}
+.chapters span {
+  flex: 1;
+  position: relative;
+  height: 6px;
+  background: var(--chalk-2);
+  border-radius: 2px;
+}
+.chapters span.is-watched {
+  background: var(--red);
+}
+.chapters i {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--slate);
+  white-space: nowrap;
+}
+.chapters + .plays {
+  margin-top: var(--s7);
+}
+@media (max-width: 760px) {
+  .chapters i {
+    display: none;
+  }
+}
+
+/* ─── Cut tiles get the thumbnail treatment ─────────── */
+.cut__thumb {
+  border-radius: 10px;
+}
+.cut__code {
+  -webkit-text-stroke: 0.06em var(--black);
+  paint-order: stroke fill;
+  text-shadow: 0.05em 0.06em 0 var(--red);
+}
+.cut[aria-checked='true'] .cut__code {
+  text-shadow: 0.05em 0.06em 0 var(--chalk);
+}
+.cut__thumb--orig .cut__code {
+  -webkit-text-stroke: 0;
+  text-shadow: 0.05em 0.06em 0 var(--red);
+}
+
+/* ─── "Your cut is ready" notification ─────────────── */
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 80;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  max-width: min(380px, calc(100vw - 40px));
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--chalk);
+  color: var(--black);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 0.5);
+  animation: toast-in 420ms var(--ease-snap);
+}
+.toast__title {
+  display: block;
+  font-weight: 700;
+}
+.toast__sub {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--slate);
+}
+.toast__x {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--slate);
+  padding: 4px;
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(30px) scale(0.9);
+    opacity: 0;
+  }
+}
+/* layout tune: keep the short from covering the thumbnail's title */
+.short {
+  width: 27%;
+  right: -2%;
+  bottom: -2%;
+}
+.hero__media {
+  padding-bottom: 22%;
+}
+.hthumb__half .bars {
+  height: 20%;
+}
+.hthumb__arrow {
+  right: 24%;
+  bottom: 30%;
+  width: 18%;
+}
+@media (max-width: 600px) {
+  .short {
+    width: 36%;
+  }
+}
+.short__caps {
+  top: 44%;
+  font-size: clamp(0.95rem, 1.45vw, 1.4rem);
+}
+.short__foot {
+  font-size: 0.6875rem;
+}
+@media (max-width: 600px) {
+  .hero__media .hero__sticker {
+    display: none;
+  }
+}

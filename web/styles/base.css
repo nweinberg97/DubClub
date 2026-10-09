@@ -127,3 +127,7 @@ h3 {
 main {
   overflow-x: clip;
 }
+.skip:not(:focus-visible) {
+  clip-path: inset(50%);
+  opacity: 0;
+}

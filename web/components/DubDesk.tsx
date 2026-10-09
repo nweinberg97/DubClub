@@ -8,6 +8,7 @@ import { DubStatus } from './DubStatus.tsx';
 import { EngineNote } from './EngineNote.tsx';
 import { StampPicker } from './Stamps.tsx';
 import { TakeInput } from './TakeInput.tsx';
+import { Avatar } from './Thumbs.tsx';
 
 interface Props {
   caps: Capabilities | null;
@@ -25,6 +26,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
   const [consent, setConsent] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [exporting, setExporting] = useState<string | null>(null);
+  const [toast, setToast] = useState(false);
   const consentId = useId();
   const strengthId = useId();
 
@@ -34,6 +36,14 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
   useEffect(() => {
     if (caps && (!accent || !caps.accents.some((a) => a.id === accent))) setAccent(caps.accents[0]?.id ?? null);
   }, [caps]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Pop a "your cut is ready" notification when a dub finishes.
+  useEffect(() => {
+    if (state.phase !== 'done') return;
+    setToast(true);
+    const t = setTimeout(() => setToast(false), 7000);
+    return () => clearTimeout(t);
+  }, [state.phase]);
 
   const engine = caps?.engine;
   const accentOpt = caps?.accents.find((a) => a.id === (state.job?.accent ?? accent));
@@ -254,6 +264,18 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
             </p>
           )}
         </section>
+      )}
+      {toast && accentOpt && (
+        <div className="toast" aria-hidden="true">
+          <Avatar small />
+          <span>
+            <span className="toast__title">Your {accentOpt.label} cut is ready</span>
+            <span className="toast__sub">Hit B to hear it.</span>
+          </span>
+          <button type="button" className="toast__x" tabIndex={-1} onClick={() => setToast(false)}>
+            ×
+          </button>
+        </div>
       )}
     </div>
   );

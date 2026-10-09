@@ -5,6 +5,7 @@ import { Echo, Ticker, Wordmark } from '../brand/Echo.tsx';
 import { DubDesk } from '../components/DubDesk.tsx';
 import { Faq, type QA } from '../components/Faq.tsx';
 import { StampPicker } from '../components/Stamps.tsx';
+import { FeedCard, HeroThumb, ShortCard, type FeedItem } from '../components/Thumbs.tsx';
 import { useCapabilities, useDub } from '../lib/hooks.ts';
 import { Link, href } from '../router.tsx';
 
@@ -120,32 +121,38 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
     <section className="hero" aria-labelledby="hero-h">
       <div className="hero__court" aria-hidden="true">
         <span className="hero__circle" />
-        <span className="hero__key" />
       </div>
       <div className="wrap hero__inner">
-        <div className="hero__top">
-          <Echo id="hero-h" className="hero__h">
-            <span className="hero__l1">Same voice.</span>
-            <span className="hero__l2">New accent.</span>
-          </Echo>
-          <span className="sticker hero__sticker" aria-hidden="true">
-            No
-            <br />
-            re-records
-          </span>
-        </div>
-        <div className="hero__under">
-          <p className="hero__lede">
-            Your video’s done and your voice is on it. Drop it in, pick an accent, and get a new cut that aims to still sound
-            like you — same words, same timing. No re-records, no voice actor.
-          </p>
-          <div className="hero__ctas">
-            <Link to={BRAND.studioPath} className="btn btn--red btn--big">
-              <span>Start dubbing</span>
-            </Link>
-            <a href="#try" className="btn btn--line btn--big">
-              <span>Try it here</span>
-            </a>
+        <div className="hero__grid">
+          <div className="hero__copy">
+            <span className="chip chip--red hero__live">
+              <span className="chip__dot" /> New: dub the take you already posted
+            </span>
+            <h1 id="hero-h" className="hero__h">
+              <span className="hero__l1 tt">Same voice.</span>
+              <span className="hero__l2 tt tt--gold">New accent.</span>
+            </h1>
+            <p className="hero__lede">
+              Your video’s done and your voice is on it. Drop it in, pick an accent, and get a new cut that aims to still
+              sound like you — same words, same timing. No re-records, no voice actor.
+            </p>
+            <div className="hero__ctas">
+              <Link to={BRAND.studioPath} className="btn btn--red btn--big">
+                <span>Start dubbing</span>
+              </Link>
+              <a href="#try" className="btn btn--line btn--big">
+                <span>Try it here</span>
+              </a>
+            </div>
+          </div>
+          <div className="hero__media">
+            <HeroThumb />
+            <ShortCard />
+            <span className="sticker hero__sticker" aria-hidden="true">
+              No
+              <br />
+              re-records
+            </span>
           </div>
         </div>
         <div className="hero__pick">
@@ -191,6 +198,13 @@ function HowItWorks() {
         <h2 id="how-h" className="h2">
           From take to post.
         </h2>
+        <div className="chapters" aria-hidden="true">
+          {STEPS.map((st, i) => (
+            <span key={st.t} className={i < 3 ? 'is-watched' : ''}>
+              <i>{st.t}</i>
+            </span>
+          ))}
+        </div>
         <ol className="plays">
           {STEPS.map((s, i) => (
             <li key={s.t} className="play">
@@ -243,36 +257,54 @@ function PlayVisual({ kind }: { kind: string }) {
   }
 }
 
-const USES: Array<{ who: string; line: string; body: string; caveat?: string }> = [
+const USES: FeedItem[] = [
   {
-    who: 'YouTube',
-    line: 'Give that take another take.',
+    hook: ['Re-record?', 'Nah.'],
+    tone: 'red',
+    prop: 'circle',
+    title: 'Give that take another take',
+    who: 'YouTube creators',
     body: 'Re-recording a twelve-minute video for a different audience eats a weekend. Dub the take you already have, check it against the original, and export the video with the new track in place.',
   },
   {
-    who: 'Faceless channels',
-    line: 'One voice. No camera. Every upload.',
+    hook: ['No face.', 'Same voice.'],
+    tone: 'court',
+    prop: 'split',
+    title: 'One voice. No camera. Every upload.',
+    who: 'faceless channels',
     body: 'Settle on one delivery for the channel and apply it to every upload, so episodes recorded months apart still sound like the same show.',
-    caveat: 'An accent change is not anonymity. Your vocal character, phrasing and what you say can still identify you.',
+    caveat: 'Pinned: an accent change is not anonymity. Your vocal character, phrasing and what you say can still identify you.',
   },
   {
-    who: 'Shorts, Reels + TikTok',
-    line: 'Recurring characters, no method acting.',
+    hook: ['1 take', '3 accents'],
+    tone: 'gold',
+    prop: 'arrow',
+    title: 'Recurring characters, no method acting',
+    who: 'Shorts, Reels and TikTok',
     body: 'Try the bit in three accents before you commit to one. Keep the timing of the joke you actually performed.',
   },
   {
-    who: 'Podcast clips + voiceover',
-    line: 'Audition the accent before you book the booth.',
+    hook: ['Skip the', 'booth'],
+    tone: 'chalk',
+    prop: 'badge',
+    title: 'Audition the accent before you book the booth',
+    who: 'podcast clips and voiceover',
     body: 'Hear a read in another accent using a recording you’ve already got, then decide whether it’s worth a proper re-record.',
   },
   {
-    who: 'Courses + tutorials',
-    line: 'Same lesson. New delivery.',
+    hook: ['Same lesson', 'New accent'],
+    tone: 'red',
+    prop: 'arrow',
+    title: 'Same lesson. New delivery.',
+    who: 'courses and tutorials',
     body: 'Explore how a recorded tutorial lands in a different accent without rebuilding the course from scratch.',
   },
   {
-    who: 'Just for fun',
-    line: 'Hear yourself from somewhere else.',
+    hook: ['Wait…', 'is that me?!'],
+    tone: 'court',
+    prop: 'circle',
+    title: 'Hear yourself from somewhere else',
+    who: 'anyone curious',
     body: 'No project required. Record a sentence, send it on tour, flip between A and B, and laugh at the bits that almost work.',
   },
 ];
@@ -284,16 +316,10 @@ function UseCases() {
         <h2 id="uses-h" className="h2">
           Built for creators.
         </h2>
-        <div className="uses__list">
+        <p className="lede uses__lede">Whatever you post, wherever it goes. Pick the one that sounds like you.</p>
+        <div className="feed">
           {USES.map((u) => (
-            <article key={u.who} className="use">
-              <h3 className="use__who">{u.who}</h3>
-              <div className="use__body">
-                <p className="use__line">{u.line}</p>
-                <p className="use__text">{u.body}</p>
-                {u.caveat && <p className="use__caveat">{u.caveat}</p>}
-              </div>
-            </article>
+            <FeedCard key={u.title} item={u} />
           ))}
         </div>
       </div>
