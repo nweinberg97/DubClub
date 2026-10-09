@@ -176,3 +176,8 @@
     position: static;
   }
 }
+/* Postmarks hang off the stamp edge on purpose; don't let them widen the page. */
+.desk__step {
+  overflow-x: clip;
+  overflow-clip-margin: 12px;
+}

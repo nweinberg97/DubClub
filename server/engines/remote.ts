@@ -7,6 +7,8 @@ import { EngineError, type Engine, type EngineDescription, type SegmentRequest }
 /** Shape returned by GET {url}/v1/capabilities. See docs/ENGINE_CONTRACT.md. */
 interface RemoteCaps {
   name?: string;
+  /** Set false for test servers that don't really convert; the UI then shows test mode. */
+  changesAccent?: boolean;
   preservesSpeaker?: boolean;
   supportsStrength?: boolean;
   maxSegmentSec?: number;
@@ -67,11 +69,12 @@ export class RemoteEngine implements Engine {
 
   describe(): EngineDescription {
     const c = this.caps;
+    const converts = c?.changesAccent !== false;
     return {
       id: this.id,
       name: c?.name || 'Accent engine',
-      kind: 'accent-conversion',
-      changesAccent: true,
+      kind: converts ? 'accent-conversion' : 'dev-passthrough',
+      changesAccent: converts,
       preservesSpeaker: c?.preservesSpeaker ?? true,
       external: c?.external ?? false,
       providerNote:

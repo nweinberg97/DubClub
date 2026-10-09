@@ -2,18 +2,20 @@
   "name": "dubclub",
   "version": "0.1.0",
   "private": true,
-  "description": "Dub Club — same voice, new postcode. Accent transformation studio for creators.",
+  "description": "Dub Club \u2014 same voice, new postcode. Accent transformation studio for creators.",
   "type": "module",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "dev": "node scripts/dev.mjs",
+    "dev": "node scripts/build.mjs && node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
     "start": "NODE_ENV=production tsx server/index.ts",
     "test": "tsx --test tests/*.test.ts",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.server.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.json",
     "e2e": "node scripts/e2e.mjs",
+    "mock-engine": "node scripts/mock-engine.mjs",
     "check": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {

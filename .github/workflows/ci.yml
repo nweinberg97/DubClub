@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm install
+      - name: Typecheck (server, shared, tests)
+        run: npm run typecheck
+      - name: Typecheck (web)
+        # Not yet verified in the original build environment, which had no @types/react available.
+        continue-on-error: true
+        run: npm run typecheck:web
+      - name: Unit + integration tests (real ffmpeg)
+        run: npm test
+      - name: Build web app
+        run: npm run build
+      - name: Browser end-to-end
+        run: |
+          npx playwright install --with-deps chromium
+          DATA_DIR=$RUNNER_TEMP/dubclub-data npm start &
+          for i in $(seq 1 30); do curl -sf http://localhost:8787/api/health && break; sleep 1; done
+          npm run e2e

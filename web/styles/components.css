@@ -874,3 +874,31 @@
   font-size: var(--fs-3);
   margin-bottom: var(--s3);
 }
+/* Phones: three stamps across (sizes stay multiples of the 12px perforation pitch). */
+@media (max-width: 520px) {
+  .stamps {
+    gap: 8px;
+  }
+  .stamps .stamp,
+  .stamps--lg .stamp {
+    --w: 108px;
+    --h: 132px;
+    padding: 6px;
+  }
+  .stamps .stamp__code,
+  .stamps--lg .stamp__code {
+    font-size: 2.1rem;
+  }
+  .stamps .stamp__label {
+    font-size: 0.8125rem;
+  }
+  .stamps .stamp__place {
+    font-size: 0.6875rem;
+  }
+  .stamps .postmark {
+    width: 72px;
+    height: 72px;
+    right: -26px;
+    top: -20px;
+  }
+}
