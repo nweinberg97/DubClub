@@ -2,6 +2,8 @@ name: probe
 on:
   push:
     branches: [engine-probe]
+permissions:
+  contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -11,7 +13,10 @@ jobs:
         with: { node-version: 22 }
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng
       - working-directory: probe
-        run: npm install && node probe.mjs
-      - uses: actions/upload-artifact@v4
+        run: npm install 2>&1 | tail -3 && node probe.mjs > log.txt 2>&1 || true
+      - name: Publish results to a branch
         if: always()
-        with: { name: probe, path: probe/*.wav }
+        run: |
+          mkdir -p /tmp/out && cp probe/log.txt probe/*.wav /tmp/out/ 2>/dev/null || true
+          cd /tmp/out && git init -q -b r && git add -A && git -c user.name=ci -c user.email=ci@x commit -qm results
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:probe-results
