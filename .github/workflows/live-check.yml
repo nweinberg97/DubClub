@@ -1,0 +1,30 @@
+# Runs the real-model browser test against the deployed site (after each Pages deploy, or on demand).
+name: Live check
+on:
+  workflow_run:
+    workflows: [Pages]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  live:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng
+      - run: npm install && npx playwright install --with-deps chromium
+      - name: Real-model e2e against the live site
+        timeout-minutes: 30
+        run: |
+          mkdir -p $RUNNER_TEMP/out
+          BASE=https://nweinberg97.github.io/DubClub OUT=$RUNNER_TEMP/out npm run e2e 2>&1 | tee $RUNNER_TEMP/out/log.txt; exit ${PIPESTATUS[0]}
+      - name: Publish results to the live-results branch
+        if: always()
+        run: |
+          cd $RUNNER_TEMP/out && rm -f notes.txt
+          git init -q -b r && git add -A && git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "live check"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:live-results
