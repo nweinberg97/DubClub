@@ -109,3 +109,15 @@ Free static hosting can host the marketing page, but the studio needs the servic
 - [x] Engine layer swappable without UI changes; engine recorded per job.
 - [x] Automated tests including real ffmpeg processing and a contract test for the `remote` engine.
 - [ ] A real accent-conversion engine evaluated on a GPU with the listening protocol in `docs/AUDIO_QA.md`. **Not done — needs hardware and a model choice.**
+
+## 2026-10 — The engine moves into the browser (Whisper + Kokoro)
+
+**Why.** No self-serve service converts an accent while keeping the speaker's voice (Sanas and Krisp are sales-only; others are desktop apps), and the owner ruled out paid APIs: it had to be free, legal, open source, safe and secure, and nothing for users to install.
+
+**What.** A Web Worker runs Whisper base (word timestamps) and Kokoro-82M (British/American voices) with Transformers.js on WebAssembly. Words are grouped into phrases, each phrase is re-spoken and speed-fitted into its original slot, and the result is assembled and level-matched into a WAV. Works on GitHub Pages; no server.
+
+**Trade-offs, stated in the UI.** The dub is a stock open-source voice, not the user's (matched by pitch, or chosen). British and American only. First use downloads ≈172 MB of model weights (cached afterwards). Speed depends on the device; WASM threads are unavailable on GitHub Pages (no COOP/COEP headers).
+
+**Security/privacy.** Audio never leaves the device; CI asserts no non-GET requests and no third-party hosts except the model host. JS/WASM is bundled and served from our origin; only weights come from Hugging Face. CSP on the Node server allows `wasm-unsafe-eval` (WebAssembly compile only, not JS eval) and connect-src to Hugging Face hosts.
+
+**Superseded.** The ElevenLabs voice-swap route and the Render deployment. The server pipeline stays in the repo with its tests for a future GPU engine.
