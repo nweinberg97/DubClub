@@ -5,7 +5,8 @@ import { Echo, Ticker, Wordmark } from '../brand/Echo.tsx';
 import { DubDesk } from '../components/DubDesk.tsx';
 import { Faq, type QA } from '../components/Faq.tsx';
 import { StampPicker } from '../components/Stamps.tsx';
-import { FeedCard, HeroThumb, ShortCard, type FeedItem } from '../components/Thumbs.tsx';
+import { FeedCard, type FeedItem } from '../components/Thumbs.tsx';
+import { Sampler } from '../components/Sampler.tsx';
 import { PHOTOS } from '../lib/photos.ts';
 import { useCapabilities, useDub } from '../lib/hooks.ts';
 import { Link, href } from '../router.tsx';
@@ -147,8 +148,7 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
             </div>
           </div>
           <div className="hero__media">
-            <HeroThumb />
-            <ShortCard />
+            <Sampler caps={caps} />
           </div>
         </div>
         <div className="hero__pick">
@@ -256,6 +256,9 @@ function PlayVisual({ kind }: { kind: string }) {
 const USES: FeedItem[] = [
   {
     photo: PHOTOS.camera,
+    say: 'Hey everyone, welcome back to the channel.',
+    lang: 'en-GB',
+    gender: 'male',
     hook: ['One take.', 'Two countries.'],
     label: 'UK cut',
     title: 'Give that take another take',
@@ -264,6 +267,9 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.editor,
+    say: 'Three things nobody tells you about saving money.',
+    lang: 'en-AU',
+    gender: 'male',
     hook: ['No face.', 'Same voice.'],
     label: 'Every upload',
     title: 'One voice. No camera. Every upload.',
@@ -273,6 +279,9 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.excited,
+    say: 'Okay, wait for it… that was way too much fun.',
+    lang: 'en-AU',
+    gender: 'female',
     hook: ['Wait for', 'the accent…'],
     label: 'Short',
     title: 'Recurring characters, no method acting',
@@ -281,6 +290,9 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.podcaster,
+    say: 'Welcome to the show. I’m your host, and today we’re talking travel.',
+    lang: 'en-AU',
+    gender: 'female',
     hook: ['Pod, but', 'make it Aussie'],
     label: 'Podcast clip',
     title: 'Audition the accent before you book the booth',
@@ -289,6 +301,9 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.presenter,
+    say: 'In this lesson, we’ll set up your very first project.',
+    lang: 'en-GB',
+    gender: 'male',
     hook: ['Lesson 4,', 'now in British'],
     label: 'Course',
     title: 'Same lesson. New delivery.',
@@ -297,6 +312,9 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.curly,
+    say: 'Hold on. Is that actually my voice?',
+    lang: 'en-GB',
+    gender: 'female',
     hook: ['Wait…', 'is that me?'],
     label: 'Just for fun',
     title: 'Hear yourself from somewhere else',

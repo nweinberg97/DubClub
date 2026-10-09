@@ -1,4 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
+import { ACCENT_CATALOG } from '../../shared/accents.ts';
 import { PHOTOS, unsplash, type Photo } from '../lib/photos.ts';
+import { loadVoices, pickVoice, speak, type SpeakHandle } from '../lib/speech.ts';
 
 /**
  * Creator-feed pieces: a before/after video thumbnail, a vertical short, and feed cards.
@@ -115,12 +118,57 @@ export interface FeedItem {
   who: string;
   body: string;
   caveat?: string;
+  /** A line this creator might say, previewed in `lang` with a browser sample voice. */
+  say: string;
+  lang: string;
+  gender?: 'male' | 'female';
 }
 
 /** A use case drawn as a video in a creator's feed. */
 export function FeedCard({ item }: { item: FeedItem }) {
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [on, setOn] = useState(false);
+  const h = useRef<SpeakHandle | null>(null);
+  useEffect(() => {
+    let alive = true;
+    loadVoices().then((v) => alive && setVoice(pickVoice(v, item.lang, item.gender)));
+    return () => {
+      alive = false;
+      h.current?.stop();
+    };
+  }, [item.lang, item.gender]);
+  const accent = ACCENT_CATALOG[item.lang]?.label ?? item.lang;
+  const toggle = () => {
+    if (!voice) return;
+    if (on) {
+      h.current?.stop();
+      return;
+    }
+    setOn(true);
+    h.current = speak(item.say, voice, () => {}, () => setOn(false));
+  };
   return (
     <article className="vcard">
+      {voice && (
+        <button
+          type="button"
+          className={`vplay ${on ? 'is-on' : ''}`}
+          onClick={toggle}
+          aria-pressed={on}
+          aria-label={`Hear “${item.say}” in a ${accent} accent (browser sample voice)`}
+        >
+          {on ? (
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+          )}
+          <span className="vplay__say">“{item.say}”</span>
+        </button>
+      )}
       <div className="vthumb" aria-hidden="true">
         <Img photo={item.photo} w={640} h={360} />
         <span className="vthumb__scrim" />

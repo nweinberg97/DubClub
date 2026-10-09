@@ -8,11 +8,22 @@ const stub = process.env.PHOTO_STUB;
 for (const [label, vp] of [['desktop', { width: 1440, height: 900 }], ['mobile', { width: 390, height: 844 }]]) {
   const page = await browser.newPage({ viewport: vp, deviceScaleFactor: 1 });
   // Sandbox can't reach Unsplash: stand in a placeholder photo so layout can be reviewed.
+  // Headless Chromium ships no speech voices; fake a few so the sampler UI can be reviewed.
+  await page.addInitScript(() => {
+    const fake = [
+      { name: 'Alex', lang: 'en-US' },
+      { name: 'Daniel', lang: 'en-GB' },
+      { name: 'Lee', lang: 'en-AU' },
+    ].map((v) => ({ ...v, default: false, localService: true, voiceURI: v.name }));
+    try {
+      Object.defineProperty(window.speechSynthesis, 'getVoices', { value: () => fake });
+    } catch {}
+  });
   if (stub) await page.route('https://images.unsplash.com/**', (r) => r.fulfill({ path: stub, contentType: 'image/jpeg' }));
   page.on('console', (m) => m.type() === 'error' && console.log(`[${label}] console:`, m.text()));
   page.on('pageerror', (e) => console.log(`[${label}] pageerror:`, e.message));
   for (const p of pages) {
-    await page.goto(base + p, { waitUntil: 'networkidle' });
+    await page.goto(base + p, { waitUntil: 'load' });
     await page.waitForTimeout(1600);
     const name = p === '/' ? 'home' : p.replace(/\W+/g, '');
     await page.screenshot({ path: `${out}/${name}-${label}.png`, fullPage: true });

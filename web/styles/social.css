@@ -587,3 +587,220 @@
     bottom: -4%;
   }
 }
+
+/* ─── Hero sampler: hear one line in each accent ─── */
+.hero__media,
+.hero__media:where(*) {
+  padding: 0;
+}
+.sampler {
+  position: relative;
+  padding: 24px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgb(53 99 255 / 0.22), transparent 60%),
+    var(--court);
+  border: 1px solid var(--glass-line);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.8);
+}
+.sampler__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+.sampler__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #3a3fae, #1d2440);
+  box-shadow: 0 0 0 2px var(--court), 0 0 0 4px var(--accent);
+}
+.sampler__name {
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+.sampler__sub {
+  font-size: 0.8125rem;
+  color: var(--steel);
+}
+.sampler__badge {
+  font-size: 0.75rem;
+}
+.sampler__line {
+  margin: 22px 0 18px;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--steel);
+}
+.sampler__line span {
+  transition: color 120ms, background-color 120ms;
+  border-radius: 6px;
+}
+.sampler__line .is-said {
+  color: var(--chalk);
+}
+.sampler__line .is-on {
+  color: var(--white);
+  background: rgb(53 99 255 / 0.35);
+  box-shadow: 0 0 0 3px rgb(53 99 255 / 0.35);
+}
+.sampler:not(.is-playing) .sampler__line {
+  color: var(--chalk);
+}
+.sampler__bars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 56px;
+  margin-bottom: 18px;
+}
+.sampler__bars span {
+  flex: 1;
+  height: 18%;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.18);
+  transition: height 300ms var(--ease-out), background 200ms;
+}
+.sampler.is-playing .sampler__bars span {
+  background: #d9dbe2;
+  animation: talk 700ms ease-in-out infinite alternate;
+  animation-delay: var(--d);
+}
+.sampler.is-playing.is-cut .sampler__bars span {
+  background: var(--accent-bright);
+}
+@keyframes talk {
+  from {
+    height: 14%;
+  }
+  to {
+    height: var(--h);
+  }
+}
+.sampler__opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sampler__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-line);
+  background: var(--glass);
+  color: var(--chalk);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.sampler__opt:hover {
+  background: var(--glass-hover);
+}
+.sampler__opt:active {
+  transform: scale(0.97);
+}
+.sampler__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--white);
+}
+.sampler__opt.is-orig .sampler__icon {
+  background: #d9dbe2;
+  color: var(--black);
+}
+.sampler__opt[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: rgb(53 99 255 / 0.16);
+}
+.sampler__opt.is-orig[aria-pressed='true'] {
+  border-color: #d9dbe2;
+  background: rgb(255 255 255 / 0.1);
+}
+.sampler__note {
+  margin-top: 14px;
+  font-size: 0.8125rem;
+  color: var(--steel);
+}
+@media (max-width: 600px) {
+  .sampler {
+    padding: 18px;
+  }
+  .sampler__head {
+    grid-template-columns: auto 1fr;
+  }
+  .sampler__badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+/* ─── Feed: play a sample line ─────────────────────── */
+.vcard {
+  position: relative;
+}
+.vplay {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--white);
+  cursor: pointer;
+  text-align: left;
+}
+.vplay > svg {
+  flex: none;
+  box-sizing: content-box;
+  padding: 9px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(6px);
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.vplay:hover > svg,
+.vplay.is-on > svg {
+  background: var(--accent);
+}
+.vplay__say {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(6px);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition: opacity var(--t-fast), max-width 300ms var(--ease-out);
+}
+.vplay:hover .vplay__say,
+.vplay:focus-visible .vplay__say,
+.vplay.is-on .vplay__say {
+  opacity: 1;
+  max-width: 100%;
+}
+/* move the label chip out of the play button's way */
+.vthumb__label {
+  left: auto;
+  right: 5%;
+}
