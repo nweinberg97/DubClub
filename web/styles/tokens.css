@@ -45,8 +45,14 @@
   --chalk-2: #e6e3db;
   --steel: #9a9ca3; /* secondary text on black */
   --slate: #55565c; /* secondary text on chalk */
-  --accent: #3b6cff; /* electric blue — Take B, the dub, the main action */
+  --accent: #3563ff; /* electric blue — Take B, the dub, the main action */
   --accent-deep: #2550e0;
+  --accent-hover: #4a74ff;
+  --accent-bright: #6f93ff; /* blue for text/marks on dark */
+  --white: #ffffff;
+  --glass: rgb(255 255 255 / 0.05);
+  --glass-hover: rgb(255 255 255 / 0.1);
+  --glass-line: rgb(255 255 255 / 0.1);
   --pop: #39f29a; /* court green — highlights, stickers, "live" */
   --green: #39f29a;
   --danger: #ff5a5f; /* errors and destructive actions only */
@@ -59,7 +65,7 @@
   --fs-2: 1.25rem;
   --fs-3: 1.75rem;
   --fs-4: clamp(2.25rem, 4.4vw, 3.5rem);
-  --fs-5: clamp(3.25rem, 9vw, 7.5rem);
+  --fs-5: clamp(2.75rem, 7vw, 6rem);
   --fs-hero: clamp(3.4rem, 13.2vw, 11.75rem);
 
   --s1: 0.25rem;
@@ -73,6 +79,10 @@
   --s9: 7rem;
 
   --skew: -9deg;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 24px;
   --ease-snap: cubic-bezier(0.2, 1.4, 0.4, 1);
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --t-fast: 120ms;

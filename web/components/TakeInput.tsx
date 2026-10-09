@@ -48,9 +48,14 @@ export function TakeInput({ limits, onTake, disabled, maxRecordSec = 60, compact
           if (f && !disabled) take(f);
         }}
       >
-        <p className="drop__title">{over ? 'Let it go.' : 'Drop a recording here'}</p>
+        <span className="drop__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 16V4m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" />
+          </svg>
+        </span>
+        <p className="drop__title">{over ? 'Let it go' : 'Drop a video or audio file'}</p>
         <p className="drop__sub">
-          Audio or video with someone talking.{' '}
+          Anything with someone talking.{' '}
           {limits && (
             <>
               Up to {Math.round(limits.maxDurationSec / 60)} minutes and {limits.maxUploadMb} MB.
@@ -59,7 +64,7 @@ export function TakeInput({ limits, onTake, disabled, maxRecordSec = 60, compact
         </p>
         <div className="drop__actions">
           <button type="button" className="btn btn--ink" onClick={() => input.current?.click()} disabled={disabled}>
-            Choose a file
+            Choose file
           </button>
           <Recorder maxSec={maxRecordSec} disabled={disabled} onDone={(blob, name) => onTake(blob, name)} onError={setProblem} />
         </div>

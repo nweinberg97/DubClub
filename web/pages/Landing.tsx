@@ -469,7 +469,7 @@ function FinalCta() {
           Give that take another take.
         </Echo>
         <p className="final__sub">No re-records. No voice actors. Just another version of you.</p>
-        <Link to={BRAND.studioPath} className="btn btn--black btn--big">
+        <Link to={BRAND.studioPath} className="btn btn--ink btn--big">
           <span>Start dubbing</span>
         </Link>
       </div>

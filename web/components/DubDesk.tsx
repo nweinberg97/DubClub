@@ -90,6 +90,9 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
         )}
         {state.phase === 'uploading' && (
           <div className="filecard">
+            <span className="filecard__icon" aria-hidden="true">
+              <MediaIcon kind="upload" />
+            </span>
             <p className="filecard__name">Uploading…</p>
             <div className="meter" role="progressbar" aria-label="Upload progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.uploadProgress * 100)}>
               <span style={{ width: `${Math.max(2, state.uploadProgress * 100)}%` }} />
@@ -104,6 +107,9 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
         )}
         {state.upload && (
           <div className="filecard">
+            <span className="filecard__icon" aria-hidden="true">
+              <MediaIcon kind={state.upload.kind} />
+            </span>
             <p className="filecard__name" title={state.upload.name}>
               {state.upload.name}
             </p>
@@ -118,7 +124,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
               </p>
             ))}
             <div className="filecard__actions">
-              <button type="button" className="btn btn--ghost" onClick={() => void dub.remove()} disabled={state.phase === 'dubbing'}>
+              <button type="button" className="btn btn--ghost btn--danger" onClick={() => void dub.remove()} disabled={state.phase === 'dubbing'}>
                 Delete this take
               </button>
             </div>
@@ -162,6 +168,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
         </h3>
         {(state.phase === 'ready' || state.phase === 'empty' || state.phase === 'uploading') && (
           <>
+            <div className="desk__run">
             <label className="check" htmlFor={consentId}>
               <input id={consentId} type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
               <span>It’s my voice, or I have permission to transform this recording.</span>
@@ -174,6 +181,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
             >
               {accentOpt ? `Make the ${accentOpt.label} cut` : 'Make the cut'}
             </button>
+            </div>
             {!state.upload && <p className="desk__muted">Add a take first.</p>}
             {state.upload && !consent && <p className="desk__muted">Tick the box to continue.</p>}
             {state.error && state.phase === 'ready' && (
@@ -278,5 +286,19 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
         </div>
       )}
     </div>
+  );
+}
+
+function MediaIcon({ kind }: { kind: 'audio' | 'video' | 'upload' }) {
+  const d =
+    kind === 'video'
+      ? 'M4 6h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1zm12 4 5-3v10l-5-3'
+      : kind === 'upload'
+        ? 'M12 16V4m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3'
+        : 'M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2';
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d={d} />
+    </svg>
   );
 }

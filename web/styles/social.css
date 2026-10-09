@@ -10,13 +10,9 @@
   font-weight: 700;
   text-transform: uppercase;
   color: var(--chalk);
-  -webkit-text-stroke: 0.04em var(--black);
-  paint-order: stroke fill;
-  text-shadow: 0.04em 0.05em 0 var(--accent);
 }
 .tt--accent {
-  color: var(--accent);
-  text-shadow: 0.04em 0.05em 0 var(--black);
+  color: var(--accent-bright);
 }
 .hthumb .tt,
 .vthumb .tt {
@@ -27,23 +23,18 @@
 .vthumb .tt--accent {
   color: #8fb0ff;
 }
-.h2,
-.studio__h {
-  text-shadow: 0.04em 0.045em 0 var(--accent);
-}
+
 
 /* Chips */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.34em 0.7em;
-  font-family: var(--display);
-  font-style: italic;
+  padding: 0.42em 0.8em;
+  font-family: var(--text);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1;
-  text-transform: uppercase;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -53,7 +44,7 @@
 }
 .chip--accent {
   background: var(--accent);
-  color: var(--black);
+  color: var(--white);
 }
 .chip--pop {
   background: var(--pop);
@@ -108,7 +99,7 @@
 
 .hthumb {
   margin: 0;
-  transform: rotate(-1.5deg);
+  transform: none;
 }
 .hthumb__frame {
   position: relative;
@@ -291,7 +282,7 @@
     0 0 0 3px var(--black),
     0 0 0 5px rgb(244 242 236 / 0.9),
     0 30px 50px rgb(0 0 0 / 0.6);
-  transform: rotate(4deg);
+  transform: rotate(3deg);
   color: var(--chalk);
   z-index: 2;
 }
@@ -515,22 +506,6 @@
   .chapters i {
     display: none;
   }
-}
-
-/* ─── Cut tiles ────────────────────────────────────── */
-.cut__thumb {
-  border-radius: 10px;
-}
-.cut__code {
-  -webkit-text-stroke: 0.05em var(--black);
-  paint-order: stroke fill;
-  text-shadow: 0.04em 0.05em 0 var(--accent);
-}
-.cut[aria-checked='true'] .cut__code {
-  text-shadow: 0.04em 0.05em 0 var(--chalk);
-}
-.cut__thumb--orig .cut__code {
-  -webkit-text-stroke: 0;
 }
 
 /* ─── Footer credits ───────────────────────────────── */

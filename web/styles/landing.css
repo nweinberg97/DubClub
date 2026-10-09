@@ -694,3 +694,222 @@
 .final__h {
   max-width: 15ch;
 }
+
+/* ─── Soft product pass: calmer chrome, brand stays in the headlines ─── */
+.nav {
+  background: rgb(12 12 13 / 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--glass-line);
+}
+.nav__inner {
+  min-height: 64px;
+}
+.nav__links {
+  font-family: var(--text);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-transform: none;
+  gap: 4px;
+}
+.nav__links a:not(.btn) {
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: none;
+  color: var(--steel);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.nav__links a:not(.btn):hover {
+  box-shadow: none;
+  background: var(--glass);
+  color: var(--chalk);
+}
+.nav__cta {
+  margin-left: 8px;
+  min-height: 40px;
+}
+.nav__toggle {
+  border: 1px solid var(--glass-line);
+  border-radius: 12px;
+  background: var(--glass);
+}
+.nav__burger,
+.nav__burger::before,
+.nav__burger::after {
+  height: 2px;
+  border-radius: 2px;
+}
+@media (max-width: 860px) {
+  .nav__links {
+    background: var(--black);
+    padding: 8px var(--gutter) 20px;
+  }
+  .nav__links a:not(.btn) {
+    font-size: 1.125rem;
+    border-radius: 12px;
+    border-bottom: 0;
+  }
+  .nav__cta {
+    margin: 12px 0 0;
+  }
+}
+.hero__circle,
+.hero__circle::after {
+  border-width: 1px;
+  border-color: rgb(255 255 255 / 0.06);
+}
+.hero__pick {
+  border-top: 1px solid var(--glass-line);
+}
+.hero__pickh {
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 1.0625rem;
+  letter-spacing: 0;
+}
+.hero__note {
+  font-size: 0.875rem;
+}
+.hero__note--pop {
+  color: var(--pop);
+}
+.sect__head .lede,
+.uses__lede {
+  font-size: 1.125rem;
+}
+/* Playbook */
+.play__n {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  -webkit-text-stroke: 1.5px var(--black);
+  margin-bottom: -0.18em;
+}
+.play:hover .play__n {
+  color: var(--accent);
+  -webkit-text-stroke-color: var(--accent);
+}
+.play__vis {
+  clip-path: none;
+  border-radius: var(--r-lg);
+}
+.play__t {
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 1.125rem;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.pv-file {
+  clip-path: none;
+  border-radius: 8px;
+  transform: rotate(-4deg);
+  font-family: var(--text);
+  font-style: normal;
+  font-size: 0.8125rem;
+}
+.pv-jersey {
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px var(--glass-line);
+}
+.pv-jersey--on {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  color: var(--accent-bright);
+}
+.pv-segs span {
+  transform: none;
+  border-radius: 6px;
+}
+.pv-segs .is-done {
+  background: var(--accent);
+}
+.pv-segs .is-now {
+  background: repeating-linear-gradient(90deg, var(--accent) 0 6px, var(--line) 6px 12px);
+}
+.pv-chip {
+  clip-path: none;
+  border-radius: 999px;
+  color: var(--white);
+  font-family: var(--text);
+  font-style: normal;
+}
+/* Stat sheet */
+.sheet__row {
+  border-color: var(--glass-line);
+  padding: 14px 0;
+}
+.sheet__state {
+  clip-path: none;
+  border-radius: 999px;
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 0.75rem;
+  padding: 0.4em 0.75em;
+}
+.sheet__row[data-state='on'] .sheet__state {
+  background: rgb(57 242 154 / 0.14);
+  color: var(--pop);
+}
+.sheet__row[data-state='mid'] .sheet__state {
+  background: rgb(53 99 255 / 0.16);
+  color: var(--accent-bright);
+}
+.sheet__row[data-state='off'] .sheet__state {
+  background: var(--glass);
+  color: var(--steel);
+}
+.sheet__name {
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 1rem;
+}
+.sheet__note {
+  font-size: 0.875rem;
+}
+/* House rules */
+.rules__item {
+  border-top: 1px solid rgb(0 0 0 / 0.12);
+}
+.rules__item dt {
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+.rules__n {
+  color: var(--accent);
+}
+/* Final */
+.final {
+  background: var(--accent);
+  color: var(--white);
+}
+.final__h {
+  --echo: var(--white);
+}
+.final__sub {
+  font-weight: 400;
+  opacity: 0.9;
+}
+.foot {
+  border-top: 1px solid var(--glass-line);
+}
+.foot__links {
+  font-family: var(--text);
+  font-style: normal;
+  text-transform: none;
+  font-size: 0.9375rem;
+}
+.foot__links a {
+  color: var(--steel);
+}
+.foot__links a:hover {
+  color: var(--chalk);
+}
+.wrap--split > .h2,
+.wrap--split > div > .h2 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+}
