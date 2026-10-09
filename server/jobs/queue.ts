@@ -246,7 +246,7 @@ export class JobQueue {
     await ff.concatWavs(outputs, joined, signal);
     const dub = path.join(dir, 'dub.wav');
     await ff.matchLevel(joined, levels.meanDb, dub, signal);
-    await ff.toPreview(dub, path.join(dir, 'preview.m4a'), signal);
+    await ff.toPreview(dub, path.join(dir, 'preview.mp3'), signal);
     const probe = await ff.probe(dub);
     job.output = { durationSec: probe.durationSec };
     await fs.rm(segDir, { recursive: true, force: true });

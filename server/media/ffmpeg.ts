@@ -101,9 +101,9 @@ export async function toWorkingWav(input: string, out: string, signal?: AbortSig
   await ffmpeg(['-i', input, '-map', '0:a:0', '-vn', '-ac', '1', '-ar', String(WORK_RATE), '-c:a', 'pcm_s16le', out], signal);
 }
 
-/** Small AAC rendition for in-browser playback. */
+/** Small rendition for in-browser playback. MP3 because every browser decodes it (AAC isn't universal on Linux/Chromium builds). */
 export async function toPreview(inputWav: string, out: string, signal?: AbortSignal) {
-  await ffmpeg(['-i', inputWav, '-c:a', 'aac', '-b:a', '128k', '-movflags', '+faststart', out], signal);
+  await ffmpeg(['-i', inputWav, '-c:a', 'libmp3lame', '-b:a', '160k', out], signal);
 }
 
 export interface LevelReport {

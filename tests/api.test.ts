@@ -73,7 +73,7 @@ describe('studio API — passthrough pipeline (real ffmpeg, no mocks)', () => {
     assert.ok(!listing.some((f) => f.includes('my take')));
     const preview = await api(s.base, token, `/api/uploads/${u.id}/preview`);
     assert.equal(preview.status, 200);
-    assert.equal(preview.headers.get('content-type'), 'audio/mp4');
+    assert.equal(preview.headers.get('content-type'), 'audio/mpeg');
   });
 
   it('runs a real job: segments, converts, stitches, previews', async () => {
@@ -140,6 +140,19 @@ describe('studio API — passthrough pipeline (real ffmpeg, no mocks)', () => {
     const r = await upload(s.base, token, files.mp3);
     assert.equal(r.status, 201);
     const { upload: u } = (await r.json()) as any;
+    await api(s.base, token, `/api/uploads/${u.id}`, { method: 'DELETE' });
+  });
+
+  it('accepts a browser-style WebM recording with no duration in its header', async () => {
+    const webm = path.join(fx, 'mic-take.webm');
+    const { spawnSync } = await import('node:child_process');
+    // Writing to a pipe (non-seekable) leaves the duration out, exactly like MediaRecorder.
+    const r = spawnSync('sh', ['-c', `ffmpeg -loglevel error -i "${files.mp3}" -c:a libopus -f webm pipe:1 > "${webm}"`]);
+    assert.equal(r.status, 0);
+    const res = await upload(s.base, token, webm);
+    assert.equal(res.status, 201, await res.clone().text());
+    const { upload: u } = (await res.json()) as any;
+    assert.ok(Math.abs(u.durationSec - 8) < 0.2, `duration ${u.durationSec}`);
     await api(s.base, token, `/api/uploads/${u.id}`, { method: 'DELETE' });
   });
 

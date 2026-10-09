@@ -1,0 +1,92 @@
+/* ─── Dub Club tokens ───────────────────────────────────────────────
+   Cobalt is the room. Orange is the dub. Sleeve is the paper the liner notes are printed on.
+   Orange always means "Take B / the transformed thing / the action that makes one". */
+
+@font-face {
+  font-family: 'DC Adventor';
+  src: url('/fonts/dc-adventor-bold.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DC Adventor';
+  src: url('/fonts/dc-adventor-regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DC Schola';
+  src: url('/fonts/dc-schola-regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DC Schola';
+  src: url('/fonts/dc-schola-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DC Schola';
+  src: url('/fonts/dc-schola-bold.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* Colour */
+  --cobalt: #1d3bc4;
+  --cobalt-deep: #152c99;
+  --cobalt-line: #4b63d8;
+  --ink: #17181f;
+  --ink-2: #22242e;
+  --ink-line: #3a3d4a;
+  --sleeve: #eef0ea;
+  --sleeve-2: #e1e4db;
+  --sleeve-line: #c5c9bf;
+  --paper: #f8f8f3;
+  --orange: #ff5b1a;
+  --orange-deep: #d9430a;
+  --mint: #8fe0be;
+  --butter: #ffe48a;
+  --fog-ink: #a6aab7; /* secondary text on ink / cobalt */
+  --fog-sleeve: #50555f; /* secondary text on sleeve */
+  --error-bg: #ffe2d6;
+  --error-line: #c7350a;
+
+  /* Type */
+  --display: 'DC Adventor', 'Century Gothic', 'Avenir Next', 'Futura', sans-serif;
+  --text: 'DC Schola', 'Century Schoolbook', 'Iowan Old Style', Georgia, serif;
+  --fs-0: 0.875rem; /* 14 */
+  --fs-1: 1.0625rem; /* 17 */
+  --fs-2: 1.3125rem; /* 21 */
+  --fs-3: 1.75rem; /* 28 */
+  --fs-4: clamp(2rem, 3.6vw, 2.75rem); /* 32–44 */
+  --fs-5: clamp(2.5rem, 6vw, 4.25rem); /* 40–68 */
+  --fs-hero: clamp(3.4rem, 10.4vw, 9.25rem);
+
+  /* Space (8pt) */
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+  --s8: 4.5rem;
+  --s9: 7rem;
+
+  /* Shape — small radii on gear, none on paper, round only for transport keys */
+  --r-gear: 10px;
+  --r-key: 7px;
+
+  /* Motion */
+  --ease-thunk: cubic-bezier(0.3, 1.45, 0.5, 1);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+  --t-med: 260ms;
+
+  --wrap: 1180px;
+  --gutter: clamp(16px, 4vw, 40px);
+}

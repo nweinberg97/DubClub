@@ -132,15 +132,23 @@ export async function createApp(cfg: Config, engine: Engine): Promise<App> {
       await pipeline(req, counter, fs.createWriteStream(source, { mode: 0o600 }));
       if (bytes === 0) throw new HttpError(400, 'empty', 'That file is empty.');
       const p = await ff.probe(source);
-      checkProbe(p, { maxDurationSec: cfg.maxDurationSec, minDurationSec: cfg.minDurationSec });
       const work = path.join(dir, 'work.wav');
-      await ff.toWorkingWav(source, work);
+      let decoded = false;
+      // Browser recordings (MediaRecorder WebM) often have no duration in their header.
+      // The upload is already size-capped, so decode it and measure what's really there.
+      if (!(p.durationSec > 0) && p.hasAudio) {
+        await ff.toWorkingWav(source, work);
+        p.durationSec = (await ff.probe(work)).durationSec;
+        decoded = true;
+      }
+      checkProbe(p, { maxDurationSec: cfg.maxDurationSec, minDurationSec: cfg.minDurationSec });
+      if (!decoded) await ff.toWorkingWav(source, work);
       const levels = await ff.analyzeLevels(work, p.durationSec);
       if (levels.maxDb < -50 || levels.audibleSec < 0.5) {
         throw new HttpError(422, 'no_speech', 'We couldn’t hear anything in that recording. Check the mic was on and try again.');
       }
       await fsp.writeFile(path.join(dir, 'levels.json'), JSON.stringify({ ...levels, durationSec: p.durationSec }), { mode: 0o600 });
-      await ff.toPreview(work, path.join(dir, 'preview.m4a'));
+      await ff.toPreview(work, path.join(dir, 'preview.mp3'));
       const warnings: string[] = [];
       if (levels.audibleSec / p.durationSec < 0.25) warnings.push('This recording is mostly quiet. Results are best with clear, continuous speech.');
       if (levels.maxDb > -0.2) warnings.push('Parts of this recording are clipping (too loud). That can make dubs sound rough.');
@@ -220,7 +228,7 @@ export async function createApp(cfg: Config, engine: Engine): Promise<App> {
         return json(res, 200, { deleted: true });
       }
       if (seg[3] === 'preview' && (method === 'GET' || method === 'HEAD')) {
-        return sendFile(req, res, path.join(storage.uploadDir(s, u.id), 'preview.m4a'), 'audio/mp4');
+        return sendFile(req, res, path.join(storage.uploadDir(s, u.id), 'preview.mp3'), 'audio/mpeg');
       }
     }
 
@@ -268,7 +276,7 @@ export async function createApp(cfg: Config, engine: Engine): Promise<App> {
         if (job.state !== 'done') throw new HttpError(409, 'not_ready', 'This dub isn’t finished yet.');
         const u = await ownUpload(s, job.uploadId);
         const dir = storage.jobDir(s, u.id, job.id);
-        if (seg[3] === 'preview') return sendFile(req, res, path.join(dir, 'preview.m4a'), 'audio/mp4');
+        if (seg[3] === 'preview') return sendFile(req, res, path.join(dir, 'preview.mp3'), 'audio/mpeg');
         const format = url.searchParams.get('format') ?? 'wav';
         const base = u.name.replace(/\.[^.]+$/, '') || 'recording';
         const tag = `dubclub-${job.accent}`;
