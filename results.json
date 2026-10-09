@@ -1,0 +1,107 @@
+{
+  "results": [
+    {
+      "name": "landing loads",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "two accents offered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mic recording captured",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dub disabled until consent",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "British dub completes in the browser",
+      "ok": true,
+      "detail": "23.4s including first model download"
+    },
+    {
+      "name": "engine heard the words",
+      "ok": true,
+      "detail": "Heard: “Hello, my name is John. Today I want to see if I can pull off a British accent.”"
+    },
+    {
+      "name": "compare plays and flips at the same moment",
+      "ok": true,
+      "detail": "{\"aPlaying\":true,\"bPaused\":true,\"aTime\":1.411714}"
+    },
+    {
+      "name": "download is a valid WAV",
+      "ok": true,
+      "detail": "dubclub (British).wav 7.50s"
+    },
+    {
+      "name": "second accent reuses loaded models",
+      "ok": true,
+      "detail": "12.9s"
+    },
+    {
+      "name": "bad file rejected with a message",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "uploaded file dubs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "only talks to this site and the model host",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no audio uploaded (no POST/PUT requests)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile menu opens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal scroll on mobile /",
+      "ok": true,
+      "detail": "overflow 0px"
+    },
+    {
+      "name": "no horizontal scroll on mobile /studio",
+      "ok": true,
+      "detail": "overflow 0px"
+    },
+    {
+      "name": "skip link is first in tab order",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no uncaught page errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "downloaded dub says the same words",
+      "ok": true,
+      "detail": "\"Hello, my name is John. Today I want to see if I can pull off a British accent.\""
+    }
+  ],
+  "metrics": {
+    "first_dub_seconds": 23.448,
+    "second_dub_seconds": 12.864,
+    "upload_dub_seconds": 19.361,
+    "model_download_mb": 172,
+    "model_requests": 28,
+    "british_transcript": "Hello, my name is John. Today I want to see if I can pull off a British accent."
+  }
+}
