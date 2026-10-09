@@ -1,0 +1,15 @@
+node_modules/
+dist/
+data/
+.env
+.env.*
+!.env.example
+*.log
+tests/.tmp/
+.DS_Store
+qa/screens/
+# Never commit user recordings or model weights
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
