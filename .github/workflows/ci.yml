@@ -35,7 +35,10 @@ jobs:
           DATA_DIR=$RUNNER_TEMP/dubclub-data npm start &
           for i in $(seq 1 30); do curl -sf http://localhost:8787/api/health && break; sleep 1; done
           mkdir -p $RUNNER_TEMP/e2e-out
-          OUT=$RUNNER_TEMP/e2e-out npm run e2e 2>&1 | tee $RUNNER_TEMP/e2e-out/log.txt; exit ${PIPESTATUS[0]}
+          OUT=$RUNNER_TEMP/e2e-out npm run e2e 2>&1 | tee $RUNNER_TEMP/e2e-out/log.txt; code=${PIPESTATUS[0]}
+          # Landing-page sample made by the real pipeline (published with the results; committed by hand).
+          OUT=$RUNNER_TEMP/e2e-out node scripts/make-demo.mjs || echo "demo generation failed"
+          exit $code
       - name: Publish e2e results to the ci-results branch
         if: always() && github.event_name == 'push'
         run: |

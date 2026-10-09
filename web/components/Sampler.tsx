@@ -18,6 +18,7 @@ interface Manifest {
   text: string;
   original: string;
   cuts: Record<string, string>;
+  note?: string;
 }
 
 interface Option {
@@ -169,8 +170,8 @@ export function Sampler() {
       {!unavailable && (
       <p className="sampler__note">
         {real
-          ? `One recording of ${speaker}, dubbed by Dub Club into each accent.`
-          : 'Preview using sample voices built into your browser, so they won’t sound like John. Your dub keeps your own voice.'}
+          ? (manifest?.note ?? `One recording of ${speaker}, dubbed by Dub Club into each accent.`)
+          : 'Preview using sample voices built into your browser. Your dub is made by Dub Club’s own engine.'}
       </p>
       )}
       {!speechSupported() && !real && <span className="sr-only">Sample voices are not supported in this browser.</span>}
