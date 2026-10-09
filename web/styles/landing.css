@@ -913,3 +913,16 @@
 .wrap--split > div > .h2 {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
 }
+/* hero: the recorder is the product */
+.hero__ctas.hero__mobilecta {
+  display: none;
+}
+@media (max-width: 1000px) {
+  .hero__ctas.hero__mobilecta {
+    display: flex;
+  }
+}
+.hear__inner {
+  align-items: center;
+  margin-bottom: 0;
+}

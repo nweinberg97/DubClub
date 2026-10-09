@@ -2,28 +2,21 @@ import { useEffect, useState } from 'react';
 import type { Capabilities } from '../../shared/types.ts';
 import { BRAND } from '../brand/config.ts';
 import { Echo, Ticker, Wordmark } from '../brand/Echo.tsx';
-import { DubDesk } from '../components/DubDesk.tsx';
+import { QuickDub } from '../components/QuickDub.tsx';
 import { Faq, type QA } from '../components/Faq.tsx';
 import { StampPicker } from '../components/Stamps.tsx';
 import { FeedCard, type FeedItem } from '../components/Thumbs.tsx';
 import { Sampler } from '../components/Sampler.tsx';
 import { PHOTOS } from '../lib/photos.ts';
-import { useCapabilities, useDub } from '../lib/hooks.ts';
+import { useCapabilities } from '../lib/hooks.ts';
 import { Link, href } from '../router.tsx';
 
 export function Landing() {
   const { caps, error } = useCapabilities();
-  const dub = useDub();
-  const [picked, setPicked] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = `${BRAND.name} — ${BRAND.tagline}`;
   }, []);
-
-  const pickFromHero = (id: string) => {
-    setPicked(id);
-    document.getElementById('try')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-  };
 
   const dev = caps?.engine.kind === 'dev-passthrough';
   const places = caps?.accents.map((a) => a.place.split(',')[0]) ?? [];
@@ -32,7 +25,7 @@ export function Landing() {
     <>
       <SiteNav />
       <main id="main">
-        <Hero caps={caps} onPick={pickFromHero} />
+        <Hero caps={caps} error={error} />
         <Ticker
           items={
             dev
@@ -43,21 +36,15 @@ export function Landing() {
           }
           tone={dev ? 'pop' : 'accent'}
         />
-        <section id="try" className="sect sect--court try" aria-labelledby="try-h">
-          <div className="wrap">
-            <div className="sect__head">
-              <h2 id="try-h" className="h2">
-                Try it on your voice.
+        <section className="sect sect--court hear" aria-labelledby="hear-h">
+          <div className="wrap sect__head hear__inner">
+            <div>
+              <h2 id="hear-h" className="h2">
+                Hear the accents.
               </h2>
-              <p className="lede">
-                Record ten seconds or drop in a clip. It runs through the real studio, then you flip between the original and
-                the new cut at the same moment.
-              </p>
+              <p className="lede">Not sure which one fits? Play the same line in each before you dub.</p>
             </div>
-            <DubDesk caps={caps} capsError={error} dub={dub} initialAccent={picked} compact />
-            <p className="try__more">
-              Longer videos or every export option? <Link to={BRAND.studioPath}>Open the full studio</Link>.
-            </p>
+            <Sampler caps={caps} />
           </div>
         </section>
         <HowItWorks />
@@ -117,7 +104,7 @@ export function SiteNav() {
   );
 }
 
-function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string) => void }) {
+function Hero({ caps, error }: { caps: Capabilities | null; error: string | null; onPick?: (id: string) => void }) {
   const dev = caps?.engine.kind === 'dev-passthrough';
   return (
     <section className="hero" aria-labelledby="hero-h">
@@ -128,51 +115,24 @@ function Hero({ caps, onPick }: { caps: Capabilities | null; onPick: (id: string
         <div className="hero__grid">
           <div className="hero__copy">
             <span className="chip chip--accent hero__live">
-              <span className="chip__dot" /> New: dub the take you already posted
+              <span className="chip__dot" /> Record. Pick an accent. Download.
             </span>
             <h1 id="hero-h" className="hero__h">
               <span className="hero__l1 tt">Same voice.</span>
               <span className="hero__l2 tt tt--accent">New accent.</span>
             </h1>
             <p className="hero__lede">
-              Your video’s done and your voice is on it. Drop it in, pick an accent, and get a new cut that aims to still
-              sound like you — same words, same timing. No re-records, no voice actor.
+              Record a sentence, pick an accent, and hear yourself from somewhere else. Same words, same timing, no re-record. Download it when you like what you hear.
             </p>
-            <div className="hero__ctas">
-              <Link to={BRAND.studioPath} className="btn btn--accent btn--big">
-                <span>Start dubbing</span>
-              </Link>
-              <a href="#try" className="btn btn--line btn--big">
-                <span>Try it here</span>
+            <div className="hero__ctas hero__mobilecta">
+              <a href="#try" className="btn btn--accent btn--big">
+                Record your voice
               </a>
             </div>
           </div>
-          <div className="hero__media">
-            <Sampler caps={caps} />
+          <div className="hero__media" id="try">
+            <QuickDub caps={caps} capsError={error} />
           </div>
-        </div>
-        <div className="hero__pick">
-          <h2 className="hero__pickh">One take. Every version.</h2>
-          {!caps && <p className="hero__note">Checking which accents are available…</p>}
-          {caps && caps.accents.length > 0 && (
-            <div className="versions">
-              <div className="versions__orig" aria-hidden="true">
-                <span className="cut__thumb cut__thumb--orig">
-                  <span className="cut__code">You</span>
-                  <span className="cut__tag">Original</span>
-                </span>
-                <span className="cut__label">Your take</span>
-                <span className="cut__place">As recorded</span>
-              </div>
-              <span className="versions__arrow" aria-hidden="true" />
-              <StampPicker accents={caps.accents} value={null} onChange={onPick} label="Pick an accent to try" />
-            </div>
-          )}
-          {dev && (
-            <p className="hero__note hero__note--pop">
-              Test mode: the accent engine isn’t connected yet, so accents aren’t changed. <a href="#stats">Here’s why.</a>
-            </p>
-          )}
         </div>
       </div>
     </section>
@@ -415,7 +375,7 @@ function HouseRules({ caps }: { caps: Capabilities | null }) {
         minutes without activity, or straight away when you delete them.
       </>,
     ],
-    ['Can I delete it?', <>Yes. “Delete this take” removes the original and every dub immediately. The studio also has “Delete everything”.</>],
+    ['Can I delete it?', <>Yes. Recording a new take deletes the old one and its dubs straight away, and everything is deleted automatically after {mins} minutes.</>],
     ['Do you make transcripts?', <>No. Dub Club doesn’t create or store transcripts.</>],
     ['Do you train on my voice?', <>No. Your recordings aren’t used to train anything.</>],
     ['Does a new accent make me anonymous?', <>No. It changes how you pronounce things, not who you are. People who know your voice may still recognise it.</>],
