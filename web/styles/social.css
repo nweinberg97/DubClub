@@ -804,3 +804,49 @@
   left: auto;
   right: 5%;
 }
+
+/* the three promises under the hero lede */
+.promises {
+  list-style: none;
+  margin: var(--s6) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 36rem;
+}
+.promises li {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--glass-line);
+  background: var(--glass);
+}
+.promises strong {
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: 1.125rem;
+  letter-spacing: 0.01em;
+  color: var(--accent-bright);
+}
+.promises li:nth-child(2) strong {
+  color: var(--pop);
+}
+.promises span {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--steel);
+}
+@media (max-width: 640px) {
+  /* The chip above the headline already says it; keep the recorder close on phones. */
+  .promises {
+    display: none;
+  }
+}
+.foot__promise {
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: var(--steel);
+}

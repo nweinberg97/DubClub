@@ -19,7 +19,7 @@ export function Landing() {
       <SiteNav />
       <main id="main">
         <Hero />
-        <Ticker items={['London cut', 'Ohio cut', 'No re-records', 'Nothing uploaded', 'London cut', 'Ohio cut', 'Free + open source', 'No booth']} tone="accent" />
+        <Ticker items={['British cut', 'American cut', 'Free', 'Nothing uploaded', 'Open source', 'No re-records', 'British cut', 'American cut', 'Free', 'Nothing uploaded', 'Open source', 'No re-records']} tone="accent" />
         <section className="sect sect--court hear" aria-labelledby="hear-h">
           <div className="wrap sect__head hear__inner">
             <div>
@@ -98,18 +98,27 @@ function Hero() {
         <div className="hero__grid">
           <div className="hero__copy">
             <span className="chip chip--accent hero__live">
-              <span className="chip__dot" /> Record. Pick an accent. Download.
+              <span className="chip__dot" /> {BRAND.promise}
             </span>
             <h1 id="hero-h" className="hero__h">
               <span className="hero__l1 tt">Your words.</span>
               <span className="hero__l2 tt tt--accent">New accent.</span>
             </h1>
             <p className="hero__lede">
-              Record a sentence, pick British or American, and hear it come back in that accent — your words, your timing, no re-record. Download it when you like what you hear.
+              Record a line, pick British or American, and hear it re-voiced in that accent — your words, your timing, no re-record. It all happens in your browser, so your
+              recording never leaves your device.
             </p>
+            <ul className="promises" aria-label="What you get">
+              {PROMISES.map((p) => (
+                <li key={p.t}>
+                  <strong>{p.t}</strong>
+                  <span>{p.d}</span>
+                </li>
+              ))}
+            </ul>
             <div className="hero__ctas hero__mobilecta">
               <a href="#try" className="btn btn--accent btn--big">
-                Record your voice
+                Record a line
               </a>
             </div>
           </div>
@@ -121,6 +130,12 @@ function Hero() {
     </section>
   );
 }
+
+const PROMISES = [
+  { t: 'Free', d: 'No account, no card, no limits to unlock.' },
+  { t: 'Private', d: 'Runs on your device. Nothing is uploaded.' },
+  { t: 'Open source', d: 'Built on Whisper and Kokoro.' },
+];
 
 const STEPS = [
   { t: 'Record a take', d: 'Hit record and say a line or two, or drop in an audio or video file you already have.', v: 'drop' },
@@ -255,12 +270,12 @@ const USES: FeedItem[] = [
   },
   {
     photo: PHOTOS.curly,
-    say: 'Hold on. Is that actually my voice?',
+    say: 'Okay. Now say that again, but British.',
     lang: 'en-GB',
     gender: 'female',
-    hook: ['Wait…', 'is that me?'],
+    hook: ['Say it again,', 'but British'],
     label: 'Just for fun',
-    title: 'Hear your words from somewhere else',
+    title: 'Hear your line from somewhere else',
     who: 'anyone curious',
     body: 'No project required. Record a sentence, send it on tour, flip between A and B, and laugh at the bits that almost work.',
   },
@@ -400,6 +415,7 @@ export function SiteFooter() {
         <div>
           <Wordmark />
           <p className="foot__tag">{BRAND.tagline}</p>
+          <p className="foot__promise">{BRAND.promise}</p>
         </div>
         <nav className="foot__links" aria-label="Footer">
           <Link to={BRAND.studioPath}>Studio</Link>

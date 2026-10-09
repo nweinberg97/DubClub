@@ -2,5 +2,6 @@
 export const BRAND = {
   name: 'Dub Club',
   tagline: 'Your words. New accent.',
+  promise: 'Free · Private · Runs in your browser',
   studioPath: '/studio',
 } as const;

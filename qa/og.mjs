@@ -11,7 +11,7 @@ await p.evaluate(() => {
     <span class="wordmark" style="font-size:44px">${'<span class="wordmark__a">DUB</span><span class="wordmark__b">CLUB</span>'}</span>
     <h1 class="echo hero__h" style="font-size:150px;line-height:.84;--echo-step:-.055em">
       <span class="echo__repeat" style="--i:3;animation:none">${line}</span><span class="echo__repeat" style="--i:2;animation:none">${line}</span><span class="echo__repeat" style="--i:1;animation:none">${line}</span><span class="echo__line">${line}</span></h1>
-    <span class="sticker" style="position:absolute;right:80px;top:70px;animation:none">No<br>re-records</span></div>`;
+    <span class="sticker" style="position:absolute;right:80px;top:70px;animation:none">Free +<br>private</span></div>`;
 });
 await p.waitForTimeout(400);
 await p.screenshot({ path: 'public/og.png' });
