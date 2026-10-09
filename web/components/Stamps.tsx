@@ -10,9 +10,15 @@ interface Props {
   size?: 'lg' | 'sm';
 }
 
+/** Stable "squad number" per accent so each jersey has its own identity. */
+function numberFor(id: string) {
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 97;
+  return String((h % 89) + 2).padStart(2, '0');
+}
+
 /**
- * Accents as postage stamps — you're sending your voice somewhere new.
- * Behaves as a radio group: arrow keys move, the selected stamp gets franked.
+ * Pick your side: each accent is a jersey. Radio group — arrow keys move, the picked jersey goes red.
  */
 export function StampPicker({ accents, value, onChange, disabled, label = 'Target accent', size = 'lg' }: Props) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -28,7 +34,7 @@ export function StampPicker({ accents, value, onChange, disabled, label = 'Targe
   };
 
   return (
-    <div className={`stamps stamps--${size}`} role="radiogroup" aria-label={label} onKeyDown={onKey}>
+    <div className={`jerseys jerseys--${size}`} role="radiogroup" aria-label={label} onKeyDown={onKey}>
       {accents.map((a, i) => {
         const on = a.id === value;
         return (
@@ -41,42 +47,29 @@ export function StampPicker({ accents, value, onChange, disabled, label = 'Targe
             role="radio"
             aria-checked={on}
             tabIndex={on || (!value && i === 0) ? 0 : -1}
-            className="stamp"
+            className="jersey"
             disabled={disabled}
             onClick={() => onChange(a.id)}
             title={a.note}
           >
-            <span className="stamp__face">
-              <span className="stamp__code" aria-hidden="true">
+            <svg className="jersey__shirt" viewBox="0 0 120 132" aria-hidden="true">
+              <path
+                className="jersey__body"
+                d="M34 4c4 12 14 18 26 18S82 16 86 4l22 8c-6 16-8 28-6 42l4 74H14l4-74c2-14 0-26-6-42z"
+              />
+              <path className="jersey__trim" d="M34 4c4 12 14 18 26 18S82 16 86 4" />
+              <text className="jersey__code" x="60" y="66" textAnchor="middle">
                 {a.stampCode}
-              </span>
-              <span className="stamp__label">{a.label}</span>
-              <span className="stamp__place">{a.place}</span>
-            </span>
-            <Postmark place={a.place} />
+              </text>
+              <text className="jersey__num" x="60" y="108" textAnchor="middle">
+                {numberFor(a.id)}
+              </text>
+            </svg>
+            <span className="jersey__label">{a.label}</span>
+            <span className="jersey__place">{a.place}</span>
           </button>
         );
       })}
     </div>
-  );
-}
-
-function Postmark({ place }: { place: string }) {
-  const id = `pm-${place.replace(/[^a-z]/gi, '')}`;
-  return (
-    <svg className="postmark" viewBox="0 0 120 120" aria-hidden="true">
-      <defs>
-        <path id={id} d="M60 60 m-41 0 a41 41 0 1 1 82 0 a41 41 0 1 1 -82 0" />
-      </defs>
-      <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" strokeWidth="3" />
-      <circle cx="60" cy="60" r="31" fill="none" stroke="currentColor" strokeWidth="2" />
-      <text fontSize="11" fill="currentColor" letterSpacing="2">
-        <textPath href={`#${id}`}>{`DUBBED IN ${place.toUpperCase()} · DUBBED IN ${place.toUpperCase()}`}</textPath>
-      </text>
-      <text x="60" y="66" textAnchor="middle" fontSize="18" fill="currentColor" fontWeight="700">
-        DUB
-      </text>
-      <path d="M118 44c-10 4-20 4-30 0s-20-4-30 0M118 58c-10 4-20 4-30 0s-20-4-30 0M118 72c-10 4-20 4-30 0s-20-4-30 0" fill="none" stroke="currentColor" strokeWidth="2.5" />
-    </svg>
   );
 }

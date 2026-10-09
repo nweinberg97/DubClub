@@ -1,46 +1,39 @@
-# Dub Club — brand system
+# Dub Club — brand system v2 ("League")
 
-## Strategy
-Creators already have the take. Dub Club gives that take a second life somewhere else — same person, same words,
-different accent. We sell experimentation, not "AI". The product is the comparison: hearing A and B at the same moment.
+## Direction
+Inspired by the energy of sports-culture creative (the kind of work agencies like Victory Creative Group make
+for Nike and the NBA): loud, confident, built for game day. Dub Club is a team you join, your accent is the side
+you pick, and every dub is a replay. Fun comes from attitude, motion and wordplay, not from clutter.
 
-**Positioning.** For creators who have already recorded it, Dub Club changes where it sounds from while aiming to keep it you.
-Unlike voice changers, it's about accent, not becoming someone else. Unlike TTS, it starts from your real performance.
+**Tagline.** Same voice. New accent.
+**Rallying cry / CTA.** Run it back.
 
-**Tagline.** Same voice. New postcode.
+## Language system
+| Product moment | Sports framing |
+|---|---|
+| Upload | Drop your take |
+| Choose accent | Pick your side (jerseys) |
+| Process | Run it back — status shown as quarters (Q1 pauses, Q2 dubbing, Q3 stitching) |
+| Compare | Instant replay — Home (original) vs Away (dub) |
+| Export | Take it home |
+| How it works / Use cases / Capabilities / Privacy / FAQ | The playbook / The roster / Stat sheet / House rules / Press conference |
 
-**Personality.** The studio friend with good taste: dry, quick, knows the gear, never oversells. Plays with ideas, not with the user.
+Plain English stays plain where trust matters: privacy answers, errors, limits and the test-mode notice.
 
-## Visual idea: the Echo and the Stamp
-- **The Echo.** In dub, a phrase is thrown into a delay and comes back fainter each time. We do that to type: the line,
-  then outlined repeats stepping down-right in orange. Used on the two biggest headlines, the wordmark ghost and the social card. Nowhere else.
-- **Two takes.** Everything that comes in pairs is colour-coded: Take A is paper-white, Take B is orange. The A/B deck draws A up and B down from one line.
-- **The Stamp.** Accents are postage stamps — you're sending your voice somewhere. Selecting one franks it with a postmark.
-- **Gear.** Buttons are hardware keys with real travel (hard offset shadow, press-down). Progress uses tape reels.
-
-## Colour
-| Token | Hex | Use |
-|---|---|---|
-| Cobalt | `#1D3BC4` | The room: hero, nav, final call. |
-| Ink | `#17181F` | Text, rules, the deck, hardware keys. |
-| Sleeve | `#EEF0EA` | Default page — cool liner-note paper. |
-| Paper | `#F8F8F3` | Raised surfaces: stamps, drop zone, panels. |
-| Orange | `#FF5B1A` | Take B, the dub, and the actions that make one. Never body text. |
-| Mint / Butter | `#8FE0BE` / `#FFE48A` | Status only: works now / test mode. |
-
-## Type
-- **DC Adventor** (subset of TeX Gyre Adventor, a geometric in the Avant Garde mould) — display, UI, labels. Tight tracking at size.
-- **DC Schola** (subset of TeX Gyre Schola, a Century Schoolbook) — reading text. Liner notes.
-- The 1970s record-sleeve pairing, on purpose. No monospace, no all-caps labels.
-- Scale: 14 / 17 / 21 / 28 / 32–44 / 40–68 / hero 54–148 px.
-
-## Voice
-- Wit in headlines and empty states. Plain, exact English in privacy, errors and limits.
-- Errors say what happened and what to do: "That video has no audio track — there's nothing to dub."
-- Never claim what the engine can't do. Test mode is announced, not hidden.
-- Verbs on buttons say what happens: "Dub it British", "Download video with new audio", "Delete everything".
+## Visual system
+- **Colour.** Black court `#0C0C0D`, court grey `#17171A`, chalk `#F4F2EC`, signal red `#FF3B1F`.
+  Gold `#FFC531` only for stickers and test-mode warnings; green `#3DDC84` only for "live" status.
+  Red always means Take B / the dub / the move that makes one.
+- **Type.** DC Cond (subset of TeX Gyre Heros Condensed) bold italic, uppercase, tight leading for everything loud.
+  DC Sans (subset of TeX Gyre Heros) for reading text.
+- **Speed trail.** Outlined repeats chase a headline from behind, like a replay ghosting on a jumbotron
+  (and a nod to dub delay). Hero, final call, social card only.
+- **Shapes.** Slanted parallelograms for primary buttons, step numbers, chips and meters. Court lines (centre circle)
+  in the hero. Jerseys for accents. One gold sticker.
+- **Ticker.** A tilted scoreboard strip under the hero; it shows real accents, or "test mode" when no engine is connected.
 
 ## Motion
-- One orchestrated moment: echoes throw out of the headline on load.
-- Everything else answers an action: keys press down, stamps lift and get franked, reels spin only while work is happening, the deck meter follows real audio level.
-- `prefers-reduced-motion` disables all of it.
+- Load: trails slide out of the headline, sticker slaps on. Ticker scrolls.
+- Response: buttons nudge forward, jerseys lift and pop when picked, live dot blinks only during real work,
+  deck meters follow real audio level.
+- `prefers-reduced-motion` turns it all off.

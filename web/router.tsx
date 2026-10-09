@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react';
+import { BASE } from './lib/env.ts';
+
+/** App path → URL including the deployment base (e.g. "/studio" → "/dubclub/studio"). */
+export const href = (to: string) => BASE + (to.startsWith('/') ? to : '/' + to);
+const current = () => {
+  const p = location.pathname;
+  const stripped = BASE && p.startsWith(BASE) ? p.slice(BASE.length) : p;
+  return stripped || '/';
+};
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
 
 export function navigate(to: string) {
-  if (to === location.pathname + location.hash) return;
-  history.pushState(null, '', to);
+  const url = href(to);
+  if (url === location.pathname + location.hash) return;
+  history.pushState(null, '', url);
   listeners.forEach((l) => l());
   const hash = to.split('#')[1];
   if (hash) requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView());
@@ -13,9 +23,9 @@ export function navigate(to: string) {
 }
 
 export function usePath() {
-  const [path, setPath] = useState(location.pathname);
+  const [path, setPath] = useState(current());
   useEffect(() => {
-    const update = () => setPath(location.pathname);
+    const update = () => setPath(current());
     listeners.add(update);
     window.addEventListener('popstate', update);
     return () => {
@@ -29,7 +39,7 @@ export function usePath() {
 export function Link({ to, onClick, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) {
   return (
     <a
-      href={to}
+      href={href(to)}
       {...rest}
       onClick={(e) => {
         onClick?.(e);

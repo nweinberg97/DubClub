@@ -9,11 +9,12 @@ for (const [n, vp] of [['desktop',{width:1440,height:900}],['mobile',{width:390,
   await p.locator('input[type=file]').setInputFiles(f);
   await p.getByText('qa-take.wav').first().waitFor();
   await p.getByLabel(/It’s my voice/).check();
-  await p.getByRole('button', { name: /^Dub it/ }).click();
+  await p.getByRole('button', { name: /^Run it back/ }).click();
   await p.waitForTimeout(150);
   await p.screenshot({ path: `qa/screens/working-${n}.png`, fullPage: true });
   await p.getByText('Done. Flip').waitFor();
   await p.getByRole('button', { name: /^Play / }).click(); await p.waitForTimeout(2500); await p.keyboard.press('b'); await p.waitForTimeout(800);
+  console.log(n, await p.evaluate(() => document.activeElement?.className + '|' + document.activeElement?.textContent?.slice(0,30)));
   await p.screenshot({ path: `qa/screens/done-${n}.png`, fullPage: true });
   await p.close();
 }

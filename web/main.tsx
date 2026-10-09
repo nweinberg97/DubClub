@@ -14,8 +14,8 @@ function NotFound() {
     <>
       <SiteNav />
       <main id="main" className="wrap notfound">
-        <h1 className="h2">Wrong postcode.</h1>
-        <p className="lede">There’s nothing at this address.</p>
+        <h1 className="h2">Out of bounds.</h1>
+        <p className="lede">Nothing on this court.</p>
         <Link to="/" className="btn btn--ink">
           Back to {BRAND.name}
         </Link>

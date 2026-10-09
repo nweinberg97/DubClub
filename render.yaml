@@ -1,0 +1,30 @@
+# Render Blueprint — the Dub Club service (API + studio + landing).
+# In Render: New → Blueprint → pick this repo. Every push to main redeploys.
+services:
+  - type: web
+    name: dubclub
+    runtime: docker
+    plan: starter # persistent disks need a paid instance (~$7/mo)
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/health
+    disk:
+      name: dubclub-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: ENGINE
+        value: passthrough # switch to remote once an accent model is connected
+      - key: TRUST_PROXY
+        value: '1'
+      - key: RETENTION_MINUTES
+        value: '60'
+      # Lets the GitHub Pages copy of the site call this service.
+      - key: ALLOWED_ORIGINS
+        value: https://nweinberg97.github.io
+      - key: REMOTE_ENGINE_URL
+        sync: false
+      - key: REMOTE_ENGINE_KEY
+        sync: false

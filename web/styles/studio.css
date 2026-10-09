@@ -2,7 +2,7 @@
 .desk {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: var(--s7) var(--s7);
+  gap: var(--s7);
   align-items: start;
 }
 .desk > .engine-note,
@@ -13,35 +13,40 @@
 }
 .desk__step {
   min-width: 0;
+  /* jerseys lift on hover; don't let anything widen the page */
+  overflow-x: clip;
+  overflow-clip-margin: 12px;
 }
 .desk__h {
   display: flex;
   align-items: center;
   gap: var(--s3);
-  font-size: var(--fs-3);
-  letter-spacing: -0.03em;
+  font-size: var(--fs-4);
   margin-bottom: var(--s4);
 }
 .desk__n {
   display: inline-grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid var(--ink);
-  font-size: 1rem;
-  letter-spacing: 0;
+  min-width: 44px;
+  height: 38px;
+  padding: 0 8px;
+  background: var(--red);
+  color: var(--black);
+  font-size: 1.5rem;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
   flex: none;
 }
 .desk__muted {
   margin-top: var(--s3);
-  font-size: 0.9375rem;
-  color: var(--fog-sleeve);
+  font-size: 0.875rem;
+  color: var(--steel);
 }
 .desk__done {
   font-family: var(--display);
+  font-style: italic;
   font-weight: 700;
-  font-size: var(--fs-2);
+  font-size: var(--fs-3);
+  text-transform: uppercase;
 }
 .desk__done::before {
   content: '';
@@ -49,10 +54,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--mint);
-  border: 2px solid var(--ink);
+  background: var(--green);
   margin-right: 10px;
-  vertical-align: -1px;
+  vertical-align: 2px;
 }
 .exports {
   display: flex;
@@ -81,36 +85,37 @@
 }
 .studio__h {
   font-size: var(--fs-5);
-  letter-spacing: -0.045em;
   margin-bottom: var(--s3);
+}
+.studio__head .lede {
+  color: var(--steel);
 }
 .studio__head .engine-pill {
   margin-top: 0;
 }
 .studio__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) 290px;
   gap: var(--s7);
   align-items: start;
 }
 .studio .desk {
   grid-template-columns: 1fr;
   gap: var(--s6);
-  border-top: 2px solid var(--ink);
+  border-top: 3px solid var(--chalk);
   padding-top: var(--s6);
 }
 .takes {
   position: sticky;
-  top: 92px;
-  border: 2px solid var(--ink);
-  border-radius: var(--r-gear);
-  background: var(--paper);
+  top: 96px;
+  background: var(--court);
+  border: 2px solid var(--line);
   padding: var(--s5);
   display: grid;
   gap: var(--s3);
 }
 .takes__h {
-  font-size: var(--fs-2);
+  font-size: var(--fs-3);
 }
 .takes__list {
   list-style: none;
@@ -121,17 +126,10 @@
   display: flex;
   align-items: center;
   gap: var(--s2);
-  border-top: 1px solid var(--sleeve-line);
+  border-top: 1px solid var(--line);
 }
-.takes__item.is-open .takes__name::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--orange);
-  margin-right: 6px;
-  vertical-align: 1px;
+.takes__item.is-open .takes__name {
+  color: var(--red);
 }
 .takes__open {
   flex: 1;
@@ -148,22 +146,23 @@
 }
 .takes__name {
   font-family: var(--display);
+  font-style: italic;
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
+  text-transform: uppercase;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .takes__meta {
   font-size: 0.8125rem;
-  color: var(--fog-sleeve);
+  color: var(--steel);
 }
 .takes__del {
   background: none;
   border: 0;
-  font-family: var(--display);
   font-size: 0.8125rem;
-  color: var(--error-line);
+  color: var(--red);
   cursor: pointer;
   padding: var(--s2);
   text-decoration: underline;
@@ -175,9 +174,4 @@
   .takes {
     position: static;
   }
-}
-/* Postmarks hang off the stamp edge on purpose; don't let them widen the page. */
-.desk__step {
-  overflow-x: clip;
-  overflow-clip-margin: 12px;
 }

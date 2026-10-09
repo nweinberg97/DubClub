@@ -1,4 +1,5 @@
 import type { Capabilities, JobInfo, UploadInfo } from '../../shared/types.ts';
+import { apiUrl } from './env.ts';
 
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) {
@@ -32,7 +33,7 @@ export async function session(): Promise<string> {
   memToken ??= readToken();
   if (memToken) return memToken;
   pending ??= (async () => {
-    const r = await fetch('/api/session', { method: 'POST' });
+    const r = await fetch(apiUrl('/api/session'), { method: 'POST' });
     if (!r.ok) throw await toError(r);
     const { token } = (await r.json()) as { token: string };
     memToken = token;
@@ -65,7 +66,7 @@ async function call<T>(path: string, init: RequestInit = {}, retried = false): P
   const token = await session();
   let r: Response;
   try {
-    r = await fetch(path, {
+    r = await fetch(apiUrl(path), {
       ...init,
       headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json', ...(init.headers ?? {}) },
     });
@@ -82,7 +83,7 @@ async function call<T>(path: string, init: RequestInit = {}, retried = false): P
 
 export const api = {
   capabilities: async (): Promise<Capabilities> => {
-    const r = await fetch('/api/capabilities');
+    const r = await fetch(apiUrl('/api/capabilities'));
     if (!r.ok) throw await toError(r);
     return r.json();
   },
@@ -112,7 +113,7 @@ export function uploadFile(
     (token) =>
       new Promise<UploadInfo>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/api/uploads');
+        xhr.open('PUT', apiUrl('/api/uploads'));
         xhr.setRequestHeader('authorization', `Bearer ${token}`);
         xhr.setRequestHeader('x-file-name', encodeURIComponent(name));
         xhr.setRequestHeader('content-type', 'application/octet-stream');
@@ -141,7 +142,7 @@ export function uploadFile(
 /** Fetch private media with the session token and return a Blob. */
 export async function fetchBlob(path: string, signal?: AbortSignal): Promise<Blob> {
   const token = await session();
-  const r = await fetch(path, { headers: { authorization: `Bearer ${token}` }, signal });
+  const r = await fetch(apiUrl(path), { headers: { authorization: `Bearer ${token}` }, signal });
   if (!r.ok) throw await toError(r);
   return r.blob();
 }
@@ -149,7 +150,7 @@ export async function fetchBlob(path: string, signal?: AbortSignal): Promise<Blo
 /** Download an export: fetch with auth, then hand the browser a named file. */
 export async function download(path: string, fallbackName: string) {
   const token = await session();
-  const r = await fetch(path, { headers: { authorization: `Bearer ${token}` } });
+  const r = await fetch(apiUrl(path), { headers: { authorization: `Bearer ${token}` } });
   if (!r.ok) throw await toError(r);
   const cd = r.headers.get('content-disposition') ?? '';
   const star = /filename\*=UTF-8''([^;]+)/.exec(cd)?.[1];

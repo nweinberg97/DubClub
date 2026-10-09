@@ -1,6 +1,6 @@
 # Dub Club
 
-**Same voice. New postcode.** Upload a recording you've already made, pick an accent, and hear it back in that accent — aiming to keep your voice, your words and your timing. Then flip between the original and the dub at the same moment, and export audio or your video with the new track.
+**Same voice. New accent.** Upload a recording you've already made, pick an accent, and run it back in that accent — aiming to keep your voice, your words and your timing. Then flip between the original and the dub at the same moment, and export audio or your video with the new track.
 
 > **Status: v0.1.** The whole product works end to end — landing page, studio, upload, mic recording, processing pipeline, A/B deck, audio and video export, deletion and expiry. **The accent model itself is not connected yet.** By default the studio runs a development engine that passes audio through unchanged, and the UI says so everywhere. See [Connecting a real accent engine](#connecting-a-real-accent-engine).
 
@@ -38,7 +38,7 @@ Development with rebuild-on-save: `npm run dev`.
 
 ```bash
 npm run typecheck   # server, shared code, tests
-npm test            # 42 unit + integration tests, using real ffmpeg (no mocks for media)
+npm test            # 43 unit + integration tests, using real ffmpeg (no mocks for media)
 npm run build && npm start &   # then:
 npm run e2e         # 26 browser checks in Chromium: real uploads, mic, dubbing, A/B, downloads, mobile, keyboard
 ```
@@ -82,6 +82,7 @@ All settings are environment variables (see `.env.example`):
 | `ENGINE` | `passthrough` | `passthrough`, `remote`, or `elevenlabs`. |
 | `REMOTE_ENGINE_URL` / `_KEY` / `_TIMEOUT_SEC` | | For `remote`. |
 | `ELEVENLABS_API_KEY` / `_MODEL_ID` / `_VOICES` | | For `elevenlabs` (voice swap). `_VOICES=en-GB:voiceId,…` |
+| `ALLOWED_ORIGINS` | unset | Comma-separated origins allowed to call the API (e.g. the GitHub Pages site). |
 | `TRUST_PROXY` | unset | Set `1` behind a reverse proxy so rate limits use `X-Forwarded-For`. |
 
 ## Connecting a real accent engine
@@ -95,20 +96,31 @@ Try the plumbing now with the echo server: `npm run mock-engine`, then `ENGINE=r
 
 **ElevenLabs** (`ENGINE=elevenlabs`) works today with a key, but it is **voice swap**: delivery kept, speaker replaced by an accented target voice. It's labelled that way in the UI. It has been tested against a mocked API only.
 
-## Deploying
+## Going live (no downloads for users — it's a website)
 
-The service is a single container (see `Dockerfile`) with a persistent volume at `/data`.
+Two pieces, both driven from this repo:
 
-```bash
-docker build -t dubclub .
-docker run -p 8787:8787 -v dubclub-data:/data --env-file .env dubclub
-```
+| Piece | What it serves | Where |
+|---|---|---|
+| **Dub Club service** | API + the full site (landing and studio) | **Render**, from `render.yaml` |
+| **GitHub Pages copy** (optional) | The same site at `nweinberg97.github.io/dubclub`, calling the Render service | `.github/workflows/pages.yml` |
 
-Fly.io / Render / Railway: deploy the Dockerfile, mount a volume at `/data`, set env vars as secrets, run **one** instance
-(the queue and storage are local). Put it behind HTTPS (the platforms do this) and set `TRUST_PROXY=1`.
-The accent model runs separately on GPU infrastructure and is reached through `REMOTE_ENGINE_URL`.
+**1. Render (required — this is what makes the studio work)**
+1. Sign in at render.com with GitHub.
+2. New → **Blueprint** → choose `nweinberg97/dubclub`. Render reads `render.yaml` and creates the service with a 1 GB disk.
+3. Apply. The site is live at the URL Render shows (e.g. `https://dubclub.onrender.com`). Every push to `main` redeploys.
 
-Do not host the studio on static hosting or serverless functions: uploads, ffmpeg and long jobs need a long-running process.
+The Starter instance (~$7/mo) is needed because uploads live on a persistent disk.
+
+**2. GitHub Pages (optional)**
+GitHub Pages only serves static files, so on its own it can show the landing page but cannot process audio.
+The workflow builds the site so its studio talks to the Render service:
+1. Repo Settings → Pages → Source: **GitHub Actions**.
+2. If your Render URL isn't `https://dubclub.onrender.com`, add an Actions variable `API_ORIGIN` with the real URL.
+3. Make sure `ALLOWED_ORIGINS` on Render includes `https://nweinberg97.github.io` (it does by default).
+
+Self-hosting elsewhere: `docker build -t dubclub . && docker run -p 8787:8787 -v dubclub-data:/data --env-file .env dubclub`.
+Don't run the studio on serverless functions — uploads, ffmpeg and long jobs need a long-running process.
 
 ## Privacy and security, as built
 
@@ -139,7 +151,7 @@ Do not host the studio on static hosting or serverless functions: uploads, ffmpe
 - No genuine demo dub audio on the landing page yet — visitors try it with their own voice instead.
 - No lockfile is committed (the build environment had no registry access). Run `npm install` and commit `package-lock.json`.
 - Web-code typecheck (`npm run typecheck:web`) hasn't been run yet; CI runs it as non-blocking.
-- Fonts are subsets of TeX Gyre Adventor/Schola under the GUST Font License (`public/fonts/`).
+- Fonts are subsets of TeX Gyre Heros / Heros Condensed under the GUST Font License (`public/fonts/`).
 - "Dub Club" has naming conflicts to clear before a public launch (see DECISIONS §2).
 
 ## Next steps (in priority order)

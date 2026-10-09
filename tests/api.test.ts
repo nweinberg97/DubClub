@@ -298,6 +298,23 @@ describe('studio API — passthrough pipeline (real ffmpeg, no mocks)', () => {
     await assert.rejects(fs.stat(dir));
   });
 
+  it('allows CORS only for configured origins', async () => {
+    const cors = await startServer(new PassthroughEngine(), { allowedOrigins: ['https://example.github.io'] });
+    try {
+      const pre = await fetch(`${cors.base}/api/uploads`, {
+        method: 'OPTIONS',
+        headers: { origin: 'https://example.github.io', 'access-control-request-method': 'PUT' },
+      });
+      assert.equal(pre.status, 204);
+      assert.equal(pre.headers.get('access-control-allow-origin'), 'https://example.github.io');
+      assert.match(pre.headers.get('access-control-allow-headers') ?? '', /Authorization/);
+      const other = await fetch(`${cors.base}/api/capabilities`, { headers: { origin: 'https://evil.example' } });
+      assert.equal(other.headers.get('access-control-allow-origin'), null);
+    } finally {
+      await cors.close();
+    }
+  });
+
   it('sets security headers and never caches private media', async () => {
     const r = await fetch(`${s.base}/api/capabilities`);
     assert.equal(r.headers.get('x-content-type-options'), 'nosniff');

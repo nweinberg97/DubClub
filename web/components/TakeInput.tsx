@@ -48,7 +48,7 @@ export function TakeInput({ limits, onTake, disabled, maxRecordSec = 60, compact
           if (f && !disabled) take(f);
         }}
       >
-        <p className="drop__title">{over ? 'Let go.' : 'Drop a recording here'}</p>
+        <p className="drop__title">{over ? 'Let it go.' : 'Drop a recording here'}</p>
         <p className="drop__sub">
           Audio or video with someone talking.{' '}
           {limits && (

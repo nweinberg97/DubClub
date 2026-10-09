@@ -1,0 +1,27 @@
+// Smoke test: the static (GitHub Pages-style) build under /dubclub talking cross-origin to the API.
+import { chromium } from 'playwright';
+const site = process.env.SITE ?? 'http://localhost:9000/dubclub';
+const b = await chromium.launch();
+const p = await b.newPage();
+const errs = [];
+p.on('pageerror', (e) => errs.push(e.message));
+p.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
+await p.goto(site + '/');
+await p.locator('h1').waitFor();
+const jerseys = await p.getByRole('radio').count();
+console.log('landing ok, jerseys from API:', jerseys);
+await p.getByRole('link', { name: 'Get dubbing' }).first().click();
+await p.waitForURL('**/dubclub/studio');
+console.log('studio url ok:', p.url());
+await p.goto(site + '/studio');
+await p.locator('h1').waitFor();
+console.log('deep link /studio ok');
+await p.locator('input[type=file]').setInputFiles('/tmp/qa-take.wav');
+await p.getByText('qa-take.wav').first().waitFor({ timeout: 30000 });
+await p.getByLabel(/It’s my voice/).check();
+await p.getByRole('button', { name: /^Run it back/ }).click();
+await p.getByText('Done. Flip').waitFor({ timeout: 60000 });
+const [dl] = await Promise.all([p.waitForEvent('download'), p.getByRole('button', { name: 'Download MP3' }).click()]);
+console.log('cross-origin dub + download ok:', dl.suggestedFilename());
+console.log('errors:', errs.length ? errs : 'none');
+await b.close();

@@ -1,51 +1,50 @@
 import type { JobInfo } from '../../shared/types.ts';
 
-const STAGES: Array<{ id: JobInfo['stage']; label: string }> = [
-  { id: 'waiting', label: 'In the queue' },
-  { id: 'preparing', label: 'Finding the pauses' },
-  { id: 'converting', label: 'Dubbing' },
-  { id: 'stitching', label: 'Stitching it back together' },
+const STAGES: Array<{ id: JobInfo['stage']; q: string; label: string }> = [
+  { id: 'waiting', q: 'Pre', label: 'In the queue' },
+  { id: 'preparing', q: 'Q1', label: 'Finding the pauses' },
+  { id: 'converting', q: 'Q2', label: 'Dubbing' },
+  { id: 'stitching', q: 'Q3', label: 'Stitching it back' },
 ];
 
 /**
- * Honest status: each label is a real pipeline stage reported by the server.
- * The bar only fills from real segment counts — never a timer.
+ * Scoreboard status. Every quarter is a real pipeline stage reported by the server,
+ * and the bar only moves on real segment counts — never a timer.
  */
 export function DubStatus({ job, onCancel }: { job: JobInfo | null; onCancel: () => void }) {
   const stage = job?.state === 'queued' ? 'waiting' : job?.stage ?? 'waiting';
-  const idx = STAGES.findIndex((s) => s.id === stage);
+  const idx = Math.max(0, STAGES.findIndex((s) => s.id === stage));
   const seg = job?.segments;
   const frac = seg && seg.total ? seg.done / seg.total : null;
-  const label = STAGES[Math.max(0, idx)]?.label ?? 'Working';
+  const now = STAGES[idx];
   return (
-    <div className="status" aria-busy="true">
-      <div className="reels" aria-hidden="true">
-        <span className="reel" />
-        <span className="reel__tape" />
-        <span className="reel" />
-      </div>
-      <div className="status__body">
-        <p className="status__now" role="status" aria-live="polite">
-          {label}
+    <div className="board" aria-busy="true">
+      <div className="board__top">
+        <span className="board__live">
+          <span className="board__dot" aria-hidden="true" /> Live
+        </span>
+        <p className="board__now" role="status" aria-live="polite">
+          {now.label}
           {stage === 'converting' && seg ? ` — part ${Math.min(seg.done + 1, seg.total)} of ${seg.total}` : ''}
           {job?.queuePosition ? ` — you’re number ${job.queuePosition}` : ''}
         </p>
-        <ol className="status__steps">
-          {STAGES.map((s, i) => (
-            <li key={s.id} className={i < idx ? 'is-done' : i === idx ? 'is-now' : ''}>
-              {s.label}
-            </li>
-          ))}
-        </ol>
-        {frac !== null && stage === 'converting' && (
-          <div className="meter" role="progressbar" aria-label="Parts dubbed" aria-valuemin={0} aria-valuemax={seg!.total} aria-valuenow={seg!.done}>
-            <span style={{ width: `${Math.max(3, frac * 100)}%` }} />
-          </div>
-        )}
+        <button type="button" className="btn btn--ghost btn--onblack" onClick={onCancel}>
+          Cancel
+        </button>
       </div>
-      <button type="button" className="btn btn--ghost" onClick={onCancel}>
-        Cancel
-      </button>
+      <ol className="board__qs">
+        {STAGES.map((s, i) => (
+          <li key={s.id} className={i < idx ? 'is-done' : i === idx ? 'is-now' : ''}>
+            <span className="board__q">{s.q}</span>
+            <span className="board__l">{s.label}</span>
+          </li>
+        ))}
+      </ol>
+      {frac !== null && stage === 'converting' && (
+        <div className="meter" role="progressbar" aria-label="Parts dubbed" aria-valuemin={0} aria-valuemax={seg!.total} aria-valuenow={seg!.done}>
+          <span style={{ width: `${Math.max(3, frac * 100)}%` }} />
+        </div>
+      )}
     </div>
   );
 }

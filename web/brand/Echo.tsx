@@ -1,9 +1,8 @@
 import { BRAND } from './config.ts';
 
 /**
- * The Echo — Dub Club's signature. In dub, a phrase is thrown into a delay and comes back
- * again and again, fainter each time. We do that to type: the line, then its repeats.
- * Repeats are decorative and hidden from assistive tech.
+ * Speed trail — Dub Club's signature. Outlined repeats chase the line from behind, like a
+ * replay ghosting across a jumbotron (or a phrase thrown into a dub delay). Decorative only.
  */
 export function Echo({
   children,
@@ -30,19 +29,36 @@ export function Echo({
   );
 }
 
+/** Wordmark: DUB in chalk, CLUB knocked out of a red slab, both italic condensed. */
 export function Wordmark({ className = '' }: { className?: string }) {
-  const [first, ...rest] = BRAND.name.split(' ');
+  const [first, ...rest] = BRAND.name.toUpperCase().split(' ');
   return (
     <span className={`wordmark ${className}`} aria-label={BRAND.name}>
-      <span className="wordmark__dub" aria-hidden="true">
+      <span className="wordmark__a" aria-hidden="true">
         {first}
-        <span className="wordmark__ghost">{first}</span>
       </span>
       {rest.length > 0 && (
-        <span className="wordmark__club" aria-hidden="true">
+        <span className="wordmark__b" aria-hidden="true">
           {rest.join(' ')}
         </span>
       )}
     </span>
+  );
+}
+
+/** Scrolling scoreboard ticker. Content is duplicated so the loop is seamless. */
+export function Ticker({ items, tone = 'red' }: { items: string[]; tone?: 'red' | 'gold' | 'chalk' }) {
+  const row = items.map((t, i) => (
+    <span key={i} className="ticker__item">
+      {t}
+    </span>
+  ));
+  return (
+    <div className={`ticker ticker--${tone}`} aria-hidden="true">
+      <div className="ticker__track">
+        <div className="ticker__run">{row}</div>
+        <div className="ticker__run">{row}</div>
+      </div>
+    </div>
   );
 }

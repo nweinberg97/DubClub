@@ -34,13 +34,13 @@ page.on('pageerror', (e) => errors.push(e.message));
 try {
   // 1–3. Landing, nav, CTA
   await page.goto(base + '/');
-  check('landing loads', (await page.locator('h1').innerText()).includes('Same voice'));
+  check('landing loads', /same voice/i.test(await page.locator('h1').innerText()));
   await page.getByRole('link', { name: 'How it works' }).first().click();
   await page.waitForTimeout(300);
   check('nav anchors work', page.url().endsWith('#how'));
   await page.getByRole('link', { name: 'Get dubbing' }).first().click();
   await page.waitForURL('**/studio');
-  check('primary CTA opens the studio', (await page.locator('h1').innerText()) === 'The studio');
+  check('primary CTA opens the studio', /^the studio$/i.test(await page.locator('h1').innerText()));
 
   // 7. Accent list reflects engine capabilities
   const caps = await (await page.request.get(base + '/api/capabilities')).json();
@@ -61,10 +61,10 @@ try {
   await page.getByRole('radio').first().focus();
   await page.keyboard.press('ArrowRight');
   const checkedId = await page.getByRole('radio', { checked: true }).innerText();
-  check('stamps are keyboard navigable', checkedId.includes(caps.accents[1]?.label ?? '__'));
+  check('accent picker is keyboard navigable', checkedId.toLowerCase().includes((caps.accents[1]?.label ?? '__').toLowerCase()));
 
   // Consent gate
-  const dubBtn = page.getByRole('button', { name: /^Dub it/ });
+  const dubBtn = page.getByRole('button', { name: /^Run it back/ });
   check('dub disabled until consent', await dubBtn.isDisabled());
   await page.getByLabel(/It’s my voice/).check();
 
@@ -106,7 +106,7 @@ try {
   await page.getByRole('button', { name: 'Delete this take' }).click();
   await page.locator('input[type=file]').setInputFiles(videoFile);
   await page.getByText('Vlog intro.mp4').first().waitFor({ timeout: 30_000 });
-  await page.getByRole('button', { name: /^Dub it/ }).click();
+  await page.getByRole('button', { name: /^Run it back/ }).click();
   await page.getByText('Done. Flip between A and B below.').waitFor({ timeout: 60_000 });
   const [vdl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download video with new audio' }).click()]);
   const vf = path.join(tmp, vdl.suggestedFilename());
@@ -163,7 +163,7 @@ try {
   await mp.getByText(/mic-take-/).first().waitFor({ timeout: 30_000 });
   check('landing demo: mic recording uploads', true);
   await mp.getByLabel(/It’s my voice/).check();
-  await mp.getByRole('button', { name: /^Dub it/ }).click();
+  await mp.getByRole('button', { name: /^Run it back/ }).click();
   await mp.getByText('Done. Flip between A and B below.').waitFor({ timeout: 60_000 });
   check('landing demo: recording dubs end to end', await mp.getByRole('button', { name: 'Download WAV' }).isVisible());
   await micBrowser.close();

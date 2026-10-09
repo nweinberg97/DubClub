@@ -333,6 +333,21 @@ export async function createApp(cfg: Config, engine: Engine): Promise<App> {
 
   const server = http.createServer((req, res) => {
     securityHeaders(res);
+    // CORS for a web app hosted on another origin (GitHub Pages). Auth is a bearer header, no cookies.
+    const origin = String(req.headers.origin ?? '');
+    if (origin && cfg.allowedOrigins.includes(origin) && (req.url ?? '').startsWith('/api/')) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Range, Content-Length');
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204, {
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-File-Name, Range',
+          'Access-Control-Max-Age': '600',
+        });
+        return res.end();
+      }
+    }
     route(req, res).catch((err) => {
       if (res.headersSent) return res.destroy();
       if (err instanceof HttpError) {

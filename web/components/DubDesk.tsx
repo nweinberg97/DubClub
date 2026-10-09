@@ -73,7 +73,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
       {/* 1 — The take */}
       <section className="desk__step" aria-labelledby="step-take">
         <h3 id="step-take" className="desk__h">
-          <span className="desk__n">1</span> Your take
+          <span className="desk__n">1</span> Drop your take
         </h3>
         {!state.upload && state.phase !== 'uploading' && (
           <TakeInput limits={caps?.limits ?? null} onTake={(f, n) => void dub.sendFile(f, n)} compact={compact} />
@@ -124,7 +124,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
       {/* 2 — Pick a postcode */}
       <section className="desk__step" aria-labelledby="step-accent">
         <h3 id="step-accent" className="desk__h">
-          <span className="desk__n">2</span> Pick a postcode
+          <span className="desk__n">2</span> Pick your side
         </h3>
         {caps && caps.accents.length > 0 ? (
           <StampPicker accents={caps.accents} value={accent} onChange={setAccent} disabled={busy} size={compact ? 'sm' : 'lg'} />
@@ -148,7 +148,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
       {/* 3 — Dub it */}
       <section className="desk__step" aria-labelledby="step-dub">
         <h3 id="step-dub" className="desk__h">
-          <span className="desk__n">3</span> Dub it
+          <span className="desk__n">3</span> Run it back
         </h3>
         {(state.phase === 'ready' || state.phase === 'empty' || state.phase === 'uploading') && (
           <>
@@ -162,7 +162,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
               disabled={!canDub}
               onClick={() => accent && void dub.startDub(accent, consent, engine?.supportsStrength ? strength : undefined)}
             >
-              {accentOpt ? `Dub it ${accentOpt.label}` : 'Dub it'}
+              {accentOpt ? `Run it back: ${accentOpt.label}` : 'Run it back'}
             </button>
             {!state.upload && <p className="desk__muted">Add a take first.</p>}
             {state.upload && !consent && <p className="desk__muted">Tick the box to continue.</p>}
@@ -205,7 +205,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
       {/* 4 — Listen */}
       <section className="desk__step desk__step--wide" aria-labelledby="step-listen">
         <h3 id="step-listen" className="desk__h">
-          <span className="desk__n">4</span> Hear the difference
+          <span className="desk__n">4</span> Watch the replay
         </h3>
         <ABPlayer
           original={state.original}
@@ -221,7 +221,7 @@ export function DubDesk({ caps, capsError, dub, initialAccent, compact }: Props)
       {state.phase === 'done' && state.job && (
         <section className="desk__step desk__step--wide" aria-labelledby="step-export">
           <h3 id="step-export" className="desk__h">
-            <span className="desk__n">5</span> Take it away
+            <span className="desk__n">5</span> Take it home
           </h3>
           <div className="exports">
             {caps?.exports.audio.map((f) => (

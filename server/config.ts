@@ -37,6 +37,8 @@ export interface Config {
   engine: string;
   remote: { url: string; key: string; timeoutSec: number };
   elevenlabs: { apiKey: string; modelId: string; voices: Record<string, string> };
+  /** Origins allowed to call the API from a separately hosted web app (e.g. GitHub Pages). */
+  allowedOrigins: string[];
   isProd: boolean;
   staticDir: string;
 }
@@ -70,6 +72,10 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
       modelId: process.env.ELEVENLABS_MODEL_ID || 'eleven_multilingual_sts_v2',
       voices,
     },
+    allowedOrigins: (process.env.ALLOWED_ORIGINS || '')
+      .split(',')
+      .map((o) => o.trim().replace(/\/+$/, ''))
+      .filter(Boolean),
     isProd: process.env.NODE_ENV === 'production',
     staticDir: path.resolve(process.cwd(), 'dist'),
     ...overrides,

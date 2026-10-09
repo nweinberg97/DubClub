@@ -5,17 +5,16 @@
 }
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 88px;
+  scroll-padding-top: 96px;
 }
 body {
   margin: 0;
-  background: var(--sleeve);
-  color: var(--ink);
+  background: var(--black);
+  color: var(--chalk);
   font-family: var(--text);
-  font-size: 1.125rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 img,
 svg,
@@ -24,15 +23,14 @@ canvas {
   max-width: 100%;
 }
 button,
-input,
-select {
+input {
   font: inherit;
   color: inherit;
 }
 a {
   color: inherit;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 0.18em;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
 }
 p {
   margin: 0;
@@ -42,17 +40,19 @@ h2,
 h3 {
   margin: 0;
   font-family: var(--display);
+  font-style: italic;
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
 }
 :focus-visible {
-  outline: 3px solid var(--orange);
+  outline: 3px solid var(--gold);
   outline-offset: 3px;
 }
 ::selection {
-  background: var(--orange);
-  color: var(--ink);
+  background: var(--red);
+  color: var(--black);
 }
 .sr-only {
   position: absolute;
@@ -68,14 +68,14 @@ h3 {
 .skip {
   position: absolute;
   left: 12px;
-  top: -60px;
+  top: -80px;
   z-index: 100;
-  background: var(--orange);
-  color: var(--ink);
+  background: var(--gold);
+  color: var(--black);
   padding: 10px 14px;
   font-family: var(--display);
-  font-weight: 700;
-  border-radius: var(--r-key);
+  font-style: italic;
+  text-transform: uppercase;
 }
 .skip:focus-visible {
   top: 12px;
@@ -100,15 +100,12 @@ h3 {
 }
 .h2 {
   font-size: var(--fs-5);
-  letter-spacing: -0.035em;
-  line-height: 0.98;
-  max-width: 16ch;
+  line-height: 0.86;
 }
 .lede {
   font-size: var(--fs-2);
-  line-height: 1.5;
-  max-width: 34em;
-  color: inherit;
+  line-height: 1.45;
+  max-width: 32em;
 }
 .row {
   display: flex;
@@ -126,4 +123,7 @@ h3 {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+main {
+  overflow-x: clip;
 }
